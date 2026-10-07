@@ -1305,6 +1305,568 @@
                 animatedObjects.push({ type: 'bat', obj: bat });
             }
         }
+        // ==================== САД ====================
+function buildGarden() {
+    // Трава с разными оттенками
+    for (let x = -80; x <= 80; x += 4) {
+        for (let z = -80; z <= 80; z += 4) {
+            const grass = new THREE.Mesh(
+                new THREE.PlaneGeometry(4, 4),
+                new THREE.MeshLambertMaterial({ 
+                    color: new THREE.Color().setHSL(0.3, 0.7, 0.3 + Math.random() * 0.15)
+                })
+            );
+            grass.rotation.x = -Math.PI / 2;
+            grass.position.set(x, 0.01, z);
+            grass.receiveShadow = true;
+            scene.add(grass);
+        }
+    }
+
+    // 25 детализированных деревьев
+    for (let i = 0; i < 25; i++) {
+        const x = (Math.random() - 0.5) * 140;
+        const z = (Math.random() - 0.5) * 140;
+        if (Math.abs(x - 18) < 5 && Math.abs(z + 15) < 5) continue;
+        buildDetailedTree(x, z);
+    }
+
+    // ГИГАНТСКОЕ ДЕРЕВО для LEGENDARCHYK и потужность
+    buildGiantTree(18, -15);
+
+    // Грядки с помидорами (5 рядов по 6)
+    for (let row = 0; row < 5; row++) {
+        for (let col = 0; col < 6; col++) {
+            const bed = new THREE.Mesh(
+                new THREE.BoxGeometry(3, 0.3, 2),
+                new THREE.MeshLambertMaterial({ color: 0x4a2511 })
+            );
+            bed.position.set(-20 + col * 4, 0.15, -20 + row * 4);
+            scene.add(bed);
+
+            // Растения на грядке
+            for (let p = 0; p < 4; p++) {
+                const plant = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.1, 0.1, 1, 6),
+                    new THREE.MeshLambertMaterial({ color: 0x228b22 })
+                );
+                plant.position.set(-20 + col * 4 - 1 + p * 0.7, 0.8, -20 + row * 4);
+                scene.add(plant);
+
+                // Помидоры
+                if (Math.random() > 0.3) {
+                    const tomato = new THREE.Mesh(
+                        new THREE.SphereGeometry(0.25, 8, 8),
+                        new THREE.MeshLambertMaterial({ color: 0xff0000 })
+                    );
+                    tomato.position.set(-20 + col * 4 - 1 + p * 0.7, 1.3, -20 + row * 4);
+                    scene.add(tomato);
+                }
+            }
+        }
+    }
+
+    // Забор по периметру
+    buildFence(-70, 70, -70, 70);
+
+    // Скамейки
+    for (let i = 0; i < 6; i++) {
+        buildBench((Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100);
+    }
+
+    // Фонтан в центре
+    buildFountain(0, 0);
+
+    // Пруд с кувшинками
+    buildPond(-30, 25);
+
+    // Теплица
+    buildGreenhouse(30, 25);
+
+    // 100 цветов
+    for (let i = 0; i < 100; i++) {
+        const flower = new THREE.Mesh(
+            new THREE.SphereGeometry(0.2, 6, 6),
+            new THREE.MeshLambertMaterial({ 
+                color: [0xff0000, 0xffff00, 0xff69b4, 0x9400d3, 0xff8c00][Math.floor(Math.random() * 5)]
+            })
+        );
+        flower.position.set(
+            (Math.random() - 0.5) * 140,
+            0.3,
+            (Math.random() - 0.5) * 140
+        );
+        scene.add(flower);
+
+        const stem = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.03, 0.03, 0.5, 4),
+            new THREE.MeshLambertMaterial({ color: 0x228b22 })
+        );
+        stem.position.copy(flower.position);
+        stem.position.y = 0.1;
+        scene.add(stem);
+    }
+
+    // 15 бабочек с анимацией
+    for (let i = 0; i < 15; i++) {
+        const butterfly = new THREE.Group();
+        const body = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.5, 6), new THREE.MeshLambertMaterial({ color: 0x000000 }));
+        butterfly.add(body);
+        for (let side of [-1, 1]) {
+            const wing = new THREE.Mesh(
+                new THREE.PlaneGeometry(0.4, 0.3),
+                new THREE.MeshBasicMaterial({ 
+                    color: [0xff69b4, 0xffd700, 0x00bfff, 0xff4500][Math.floor(Math.random() * 4)],
+                    side: THREE.DoubleSide
+                })
+            );
+            wing.position.x = side * 0.25;
+            wing.rotation.y = side * 0.3;
+            butterfly.add(wing);
+        }
+        butterfly.position.set(
+            (Math.random() - 0.5) * 80,
+            2 + Math.random() * 3,
+            (Math.random() - 0.5) * 80
+        );
+        butterfly.userData = {
+            basePos: butterfly.position.clone(),
+            phase: Math.random() * Math.PI * 2
+        };
+        scene.add(butterfly);
+        animatedObjects.push({ type: 'butterfly', obj: butterfly });
+    }
+
+    // 10 пчёл
+    for (let i = 0; i < 10; i++) {
+        const bee = new THREE.Group();
+        const beeBody = new THREE.Mesh(new THREE.SphereGeometry(0.15, 8, 8), new THREE.MeshLambertMaterial({ color: 0xffd700 }));
+        bee.add(beeBody);
+        const stripe = new THREE.Mesh(new THREE.TorusGeometry(0.15, 0.05, 4, 8), new THREE.MeshLambertMaterial({ color: 0x000000 }));
+        stripe.rotation.x = Math.PI / 2;
+        bee.add(stripe);
+        for (let side of [-1, 1]) {
+            const wing = new THREE.Mesh(
+                new THREE.PlaneGeometry(0.2, 0.15),
+                new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.7, side: THREE.DoubleSide })
+            );
+            wing.position.set(side * 0.1, 0.15, 0);
+            bee.add(wing);
+        }
+        bee.position.set(
+            (Math.random() - 0.5) * 60,
+            1 + Math.random() * 2,
+            (Math.random() - 0.5) * 60
+        );
+        bee.userData = {
+            basePos: bee.position.clone(),
+            phase: Math.random() * Math.PI * 2
+        };
+        scene.add(bee);
+        animatedObjects.push({ type: 'bee', obj: bee });
+    }
+
+    // ПОРТАЛ В НЕЗЕР (Minecraft-стиль) - ведет в Майнкрафт
+    buildNetherPortal(40, 0);
+}
+
+// Детализированное дерево
+function buildDetailedTree(x, z) {
+    const group = new THREE.Group();
+    const trunkMat = new THREE.MeshLambertMaterial({ color: 0x4a2511 });
+    const leafMat = new THREE.MeshLambertMaterial({ color: 0x228b22 });
+
+    const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.8, 5, 10), trunkMat);
+    trunk.position.y = 2.5;
+    trunk.castShadow = true;
+    group.add(trunk);
+
+    for (let i = 0; i < 4; i++) {
+        const branch = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.25, 2, 6), trunkMat);
+        branch.position.y = 3 + i * 0.5;
+        branch.rotation.z = (Math.random() - 0.5) * 1.5;
+        branch.rotation.x = (Math.random() - 0.5) * 1.5;
+        group.add(branch);
+    }
+
+    const leafPositions = [
+        [0, 6, 0, 3],
+        [-1.5, 5.5, 1, 2],
+        [1.5, 5.5, -1, 2],
+        [0, 7.5, 0, 2]
+    ];
+    leafPositions.forEach(([px, py, pz, r]) => {
+        const leaves = new THREE.Mesh(new THREE.SphereGeometry(r, 12, 12), leafMat);
+        leaves.position.set(px, py, pz);
+        leaves.castShadow = true;
+        group.add(leaves);
+    });
+
+    group.position.set(x, 0, z);
+    scene.add(group);
+}
+
+// Гигантское дерево для LEGENDARCHYK и потужность
+function buildGiantTree(x, z) {
+    const group = new THREE.Group();
+    const trunkMat = new THREE.MeshLambertMaterial({ color: 0x4a2511 });
+    const leafMat = new THREE.MeshLambertMaterial({ color: 0x228b22 });
+
+    // Мощный ствол
+    const trunk = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 2.5, 12, 16), trunkMat);
+    trunk.position.y = 6;
+    trunk.castShadow = true;
+    group.add(trunk);
+
+    // Корни
+    for (let i = 0; i < 8; i++) {
+        const angle = (i / 8) * Math.PI * 2;
+        const root = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.5, 3, 8), trunkMat);
+        root.position.set(Math.cos(angle) * 2, 0.5, Math.sin(angle) * 2);
+        root.rotation.z = Math.cos(angle) * 0.5;
+        root.rotation.x = Math.sin(angle) * 0.5;
+        group.add(root);
+    }
+
+    // Ветви
+    for (let i = 0; i < 8; i++) {
+        const angle = (i / 8) * Math.PI * 2;
+        const branch = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.6, 4, 8), trunkMat);
+        branch.position.set(Math.cos(angle) * 2, 9, Math.sin(angle) * 2);
+        branch.rotation.z = Math.cos(angle) * 1.2;
+        branch.rotation.x = Math.sin(angle) * 1.2;
+        group.add(branch);
+    }
+
+    // Огромная крона
+    const crownPositions = [
+        [0, 14, 0, 5],
+        [-3, 13, 2, 3.5],
+        [3, 13, -2, 3.5],
+        [2, 15, 2, 3],
+        [-2, 15, -2, 3],
+        [0, 16, 0, 2.5]
+    ];
+    crownPositions.forEach(([px, py, pz, r]) => {
+        const leaves = new THREE.Mesh(new THREE.SphereGeometry(r, 16, 16), leafMat);
+        leaves.position.set(px, py, pz);
+        leaves.castShadow = true;
+        group.add(leaves);
+    });
+
+    group.position.set(x, 0, z);
+    scene.add(group);
+}
+
+// Теплица
+function buildGreenhouse(x, z) {
+    const group = new THREE.Group();
+    const frameMat = new THREE.MeshLambertMaterial({ color: 0x888888 });
+    const glassMat = new THREE.MeshBasicMaterial({ color: 0x87ceeb, transparent: true, opacity: 0.4 });
+
+    const frame1 = new THREE.Mesh(new THREE.BoxGeometry(10, 5, 0.2), frameMat);
+    frame1.position.set(0, 2.5, -4);
+    group.add(frame1);
+    const frame2 = frame1.clone();
+    frame2.position.z = 4;
+    group.add(frame2);
+    const frame3 = new THREE.Mesh(new THREE.BoxGeometry(0.2, 5, 8), frameMat);
+    frame3.position.set(-5, 2.5, 0);
+    group.add(frame3);
+    const frame4 = frame3.clone();
+    frame4.position.x = 5;
+    group.add(frame4);
+
+    const roof = new THREE.Mesh(new THREE.ConeGeometry(7, 3, 4), glassMat);
+    roof.position.y = 6.5;
+    roof.rotation.y = Math.PI / 4;
+    group.add(roof);
+
+    for (let side of [-1, 1]) {
+        const glass = new THREE.Mesh(new THREE.PlaneGeometry(10, 5), glassMat);
+        glass.position.set(0, 2.5, side * 4);
+        if (side === -1) glass.rotation.y = Math.PI;
+        group.add(glass);
+    }
+    for (let side of [-1, 1]) {
+        const glass = new THREE.Mesh(new THREE.PlaneGeometry(8, 5), glassMat);
+        glass.position.set(side * 5, 2.5, 0);
+        glass.rotation.y = Math.PI / 2;
+        group.add(glass);
+    }
+
+    for (let i = 0; i < 6; i++) {
+        const plant = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.2, 0.2, 2, 8),
+            new THREE.MeshLambertMaterial({ color: 0x228b22 })
+        );
+        plant.position.set(-3 + i * 1.2, 1, 0);
+        group.add(plant);
+    }
+
+    group.position.set(x, 0, z);
+    scene.add(group);
+}
+
+// ПОРТАЛ В НЕЗЕР (Minecraft-стиль)
+function buildNetherPortal(x, z) {
+    const group = new THREE.Group();
+    
+    // Рамка из обсидиана (4x5 блоков)
+    const obsidianMat = new THREE.MeshLambertMaterial({ color: 0x1a0a2e });
+    const portalMat = new THREE.MeshBasicMaterial({ 
+        color: 0x9400d3, 
+        transparent: true, 
+        opacity: 0.8 
+    });
+
+    // Левая стойка
+    for (let y = 0; y < 5; y++) {
+        const block = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), obsidianMat);
+        block.position.set(-2, y + 0.5, 0);
+        block.castShadow = true;
+        group.add(block);
+    }
+
+    // Правая стойка
+    for (let y = 0; y < 5; y++) {
+        const block = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), obsidianMat);
+        block.position.set(2, y + 0.5, 0);
+        block.castShadow = true;
+        group.add(block);
+    }
+
+    // Верхняя перемычка
+    for (let x = -1; x <= 1; x++) {
+        const block = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), obsidianMat);
+        block.position.set(x, 4.5, 0);
+        block.castShadow = true;
+        group.add(block);
+    }
+
+    // Нижняя перемычка
+    for (let x = -1; x <= 1; x++) {
+        const block = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), obsidianMat);
+        block.position.set(x, 0.5, 0);
+        block.castShadow = true;
+        group.add(block);
+    }
+
+    // Портал (фиолетовый вихрь)
+    const portal = new THREE.Mesh(new THREE.PlaneGeometry(3, 4), portalMat);
+    portal.position.set(0, 2.5, 0.1);
+    group.add(portal);
+
+    // Частицы портала
+    for (let i = 0; i < 50; i++) {
+        const particle = new THREE.Mesh(
+            new THREE.SphereGeometry(0.1, 6, 6),
+            new THREE.MeshBasicMaterial({ 
+                color: 0x9400d3, 
+                transparent: true, 
+                opacity: 0.6 + Math.random() * 0.4 
+            })
+        );
+        particle.position.set(
+            (Math.random() - 0.5) * 2.5,
+            Math.random() * 4 + 0.5,
+            0.2 + Math.random() * 0.3
+        );
+        particle.userData = {
+            baseY: particle.position.y,
+            phase: Math.random() * Math.PI * 2,
+            speed: 0.02 + Math.random() * 0.03
+        };
+        group.add(particle);
+        animatedObjects.push({ type: 'portalParticle', obj: particle });
+    }
+
+    // Свечение портала
+    const portalLight = new THREE.PointLight(0x9400d3, 3, 10);
+    portalLight.position.set(0, 2.5, 1);
+    group.add(portalLight);
+
+    group.position.set(x, 0, z);
+    scene.add(group);
+
+    // Сохраняем портал для взаимодействия
+    portal = { 
+        mesh: group, 
+        pos: new THREE.Vector3(x, 0, z), 
+        type: 'nether',
+        nextScene: 'minecraft'
+    };
+}
+
+// ==================== МАЙНКРАФТ (НЕЗЕР) ====================
+function buildMinecraft() {
+    // Блоки земли с травой
+    for (let x = -40; x <= 40; x += 2) {
+        for (let z = -40; z <= 40; z += 2) {
+            const block = new THREE.Mesh(
+                new THREE.BoxGeometry(2, 2, 2),
+                new THREE.MeshLambertMaterial({ color: 0x8b4513 })
+            );
+            block.position.set(x, 1, z);
+            block.castShadow = true;
+            block.receiveShadow = true;
+            scene.add(block);
+
+            const grass = new THREE.Mesh(
+                new THREE.BoxGeometry(2, 0.3, 2),
+                new THREE.MeshLambertMaterial({ color: 0x228b22 })
+            );
+            grass.position.set(x, 2.15, z);
+            scene.add(grass);
+        }
+    }
+
+    // Деревья Minecraft-стиль
+    const treePositions = [[0, 0], [-15, 10], [20, -15], [-25, -20], [30, 25], [-10, 30]];
+    treePositions.forEach(([tx, tz]) => {
+        buildMinecraftTree(tx, tz);
+    });
+
+    // Облака
+    for (let i = 0; i < 20; i++) {
+        const cloud = new THREE.Group();
+        for (let j = 0; j < 5; j++) {
+            const puff = new THREE.Mesh(
+                new THREE.BoxGeometry(3, 1, 3),
+                new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 })
+            );
+            puff.position.set(j * 2 - 4, Math.random() * 0.5, Math.random() * 2 - 1);
+            cloud.add(puff);
+        }
+        cloud.position.set(
+            (Math.random() - 0.5) * 150,
+            30 + Math.random() * 10,
+            (Math.random() - 0.5) * 150
+        );
+        cloud.userData = { speed: 0.01 + Math.random() * 0.02 };
+        scene.add(cloud);
+        animatedObjects.push({ type: 'cloud', obj: cloud });
+    }
+
+    // Солнце
+    const sun = new THREE.Mesh(
+        new THREE.SphereGeometry(5, 16, 16),
+        new THREE.MeshBasicMaterial({ color: 0xffff00 })
+    );
+    sun.position.set(50, 40, -50);
+    scene.add(sun);
+    const sunLight = new THREE.PointLight(0xffff00, 1, 200);
+    sunLight.position.copy(sun.position);
+    scene.add(sunLight);
+
+    // Крипер
+    buildCreeper(15, 15);
+
+    // Свинья
+    buildPig(-20, 10);
+
+    // Кирка у дерева Loli
+    const pickaxe = new THREE.Group();
+    const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 2, 6), new THREE.MeshLambertMaterial({ color: 0x654321 }));
+    pickaxe.add(handle);
+    const head = new THREE.Mesh(new THREE.BoxGeometry(1, 0.5, 0.3), new THREE.MeshLambertMaterial({ color: 0x888888 }));
+    head.position.y = 1;
+    pickaxe.add(head);
+    pickaxe.position.set(-8, 3, 10);
+    pickaxe.rotation.z = 0.5;
+    scene.add(pickaxe);
+}
+
+function buildMinecraftTree(x, z) {
+    const group = new THREE.Group();
+    const trunkMat = new THREE.MeshLambertMaterial({ color: 0x654321 });
+    const leafMat = new THREE.MeshLambertMaterial({ color: 0x228b22 });
+
+    for (let y = 0; y < 5; y++) {
+        const block = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), trunkMat);
+        block.position.set(0, y + 0.5, 0);
+        block.castShadow = true;
+        group.add(block);
+    }
+
+    for (let dx = -1; dx <= 1; dx++) {
+        for (let dy = 0; dy < 3; dy++) {
+            for (let dz = -1; dz <= 1; dz++) {
+                if (Math.abs(dx) + Math.abs(dz) + dy < 4) {
+                    const block = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), leafMat);
+                    block.position.set(dx, dy + 5, dz);
+                    block.castShadow = true;
+                    group.add(block);
+                }
+            }
+        }
+    }
+
+    group.position.set(x, 2, z);
+    scene.add(group);
+}
+
+function buildCreeper(x, z) {
+    const group = new THREE.Group();
+    const mat = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
+    const darkMat = new THREE.MeshLambertMaterial({ color: 0x006400 });
+
+    const body = new THREE.Mesh(new THREE.BoxGeometry(1, 1.5, 0.6), mat);
+    body.position.y = 1.5;
+    group.add(body);
+
+    const head = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), mat);
+    head.position.y = 2.75;
+    group.add(head);
+
+    const face = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.8, 0.1), darkMat);
+    face.position.set(0, 2.75, 0.55);
+    group.add(face);
+
+    for (let side of [-0.2, 0.2]) {
+        const eye = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.1), new THREE.MeshBasicMaterial({ color: 0x000000 }));
+        eye.position.set(side, 2.85, 0.6);
+        group.add(eye);
+    }
+
+    for (let side of [-0.25, 0.25]) {
+        const leg = new THREE.Mesh(new THREE.BoxGeometry(0.4, 1, 0.4), mat);
+        leg.position.set(side, 0.5, 0);
+        group.add(leg);
+    }
+
+    group.position.set(x, 2, z);
+    scene.add(group);
+}
+
+function buildPig(x, z) {
+    const group = new THREE.Group();
+    const mat = new THREE.MeshLambertMaterial({ color: 0xffb6c1 });
+    const darkMat = new THREE.MeshLambertMaterial({ color: 0xff69b4 });
+
+    const body = new THREE.Mesh(new THREE.BoxGeometry(1.5, 1, 1), mat);
+    body.position.y = 1;
+    group.add(body);
+
+    const head = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.8, 0.8), mat);
+    head.position.set(0.9, 1.2, 0);
+    group.add(head);
+
+    const snout = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.3, 0.4), darkMat);
+    snout.position.set(1.3, 1.1, 0);
+    group.add(snout);
+
+    for (let dx of [-0.5, 0.5]) {
+        for (let dz of [-0.3, 0.3]) {
+            const leg = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.8, 0.3), mat);
+            leg.position.set(dx, 0.4, dz);
+            group.add(leg);
+        }
+    }
+
+    group.position.set(x, 2, z);
+    scene.add(group);
+}
         // ---------- САД ----------
         function buildGarden() {
             // Трава (разные оттенки)
