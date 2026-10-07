@@ -3,27 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LIMEX THE HUNT 1 - 3D World</title>
+    <title>LIMEX THE HUNT 1 - ULTRA 3D</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { overflow: hidden; background: #000; font-family: 'Segoe UI', sans-serif; }
+        body { overflow: hidden; background: #000; font-family: 'Segoe UI', sans-serif; user-select: none; }
         
         #blocker {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, #1a0033 0%, #000 100%);
+            background: radial-gradient(ellipse at center, #2a0845 0%, #000 100%);
             z-index: 1000; display: flex; flex-direction: column; 
             justify-content: center; align-items: center;
         }
         
         #blocker h1 {
-            font-size: 5em; 
-            background: linear-gradient(45deg, #ff69b4, #00f3ff, #ff69b4);
+            font-size: 6em; 
+            background: linear-gradient(45deg, #ff69b4, #00f3ff, #ff69b4, #ffd700);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             animation: gradient 3s ease infinite;
-            background-size: 200% 200%;
-            margin-bottom: 20px; text-transform: uppercase; letter-spacing: 8px;
+            background-size: 300% 300%;
+            margin-bottom: 20px; text-transform: uppercase; letter-spacing: 10px;
+            filter: drop-shadow(0 0 30px rgba(255,105,180,0.8));
         }
         
         @keyframes gradient {
@@ -32,117 +33,130 @@
             100% { background-position: 0% 50%; }
         }
         
-        #blocker p { color: #fff; font-size: 1.3em; margin: 10px 0; }
+        #blocker p { color: #fff; font-size: 1.4em; margin: 10px 0; text-shadow: 0 0 10px #ff69b4; }
         
         #blocker .controls {
-            background: rgba(255,105,180,0.1); border: 2px solid #ff69b4;
-            padding: 25px; margin: 25px; border-radius: 15px; text-align: left;
+            background: rgba(255,105,180,0.15); border: 2px solid #ff69b4;
+            padding: 30px; margin: 30px; border-radius: 20px; text-align: left;
+            backdrop-filter: blur(15px); box-shadow: 0 0 40px rgba(255,105,180,0.4);
         }
         
-        #blocker .controls p { margin: 10px 0; font-size: 1.1em; }
+        #blocker .controls p { margin: 12px 0; font-size: 1.2em; }
         
         #blocker button {
             background: linear-gradient(45deg, #ff69b4, #00f3ff);
-            color: #000; border: none; padding: 25px 70px; font-size: 1.8em;
-            font-weight: bold; cursor: pointer; margin-top: 30px;
-            border-radius: 50px; transition: all 0.3s;
-            box-shadow: 0 0 30px rgba(255,105,180,0.5);
+            color: #000; border: none; padding: 30px 80px; font-size: 2em;
+            font-weight: bold; cursor: pointer; margin-top: 40px;
+            border-radius: 60px; transition: all 0.3s;
+            box-shadow: 0 0 40px rgba(255,105,180,0.6);
+            text-transform: uppercase; letter-spacing: 3px;
         }
         
-        #blocker button:hover { transform: scale(1.1); }
+        #blocker button:hover { 
+            transform: scale(1.1); 
+            box-shadow: 0 0 60px rgba(255,105,180,1);
+        }
         
         #hud {
             position: fixed; top: 20px; left: 20px; z-index: 100;
             background: rgba(0,0,0,0.85); border: 2px solid #ff69b4;
             padding: 20px; border-radius: 15px; color: #fff;
-            min-width: 200px;
+            backdrop-filter: blur(10px); min-width: 220px;
+            box-shadow: 0 0 20px rgba(255,105,180,0.5);
         }
         
-        #hud .counter { font-size: 1.5em; color: #ff69b4; font-weight: bold; margin-bottom: 10px; }
-        #hud .location { font-size: 1.2em; color: #00f3ff; margin-bottom: 10px; }
-        #hud .timer { font-size: 1.3em; color: #ffd700; font-weight: bold; }
+        #hud .counter { font-size: 1.6em; color: #ff69b4; font-weight: bold; margin-bottom: 10px; }
+        #hud .location { font-size: 1.3em; color: #00f3ff; margin-bottom: 10px; }
+        #hud .timer { font-size: 1.4em; color: #ffd700; font-weight: bold; }
         
         #crosshair {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 30px; height: 30px; z-index: 100; pointer-events: none;
+            width: 40px; height: 40px; z-index: 100; pointer-events: none;
         }
         #crosshair::before, #crosshair::after {
             content: ''; position: absolute; background: #fff;
-            box-shadow: 0 0 10px #fff;
+            box-shadow: 0 0 15px #fff, 0 0 30px #ff69b4;
         }
-        #crosshair::before { width: 3px; height: 30px; left: 13px; top: 0; }
-        #crosshair::after { width: 30px; height: 3px; left: 0; top: 13px; }
+        #crosshair::before { width: 3px; height: 40px; left: 18px; top: 0; }
+        #crosshair::after { width: 40px; height: 3px; left: 0; top: 18px; }
         
         #notification {
-            position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
+            position: fixed; top: 100px; left: 50%; transform: translateX(-50%);
             background: linear-gradient(135deg, #00ff00, #00cc00);
-            color: #000; padding: 25px 50px; border-radius: 15px;
-            font-size: 1.8em; font-weight: bold; z-index: 2000;
-            display: none; box-shadow: 0 0 40px rgba(0,255,0,0.8);
-            border: 3px solid #00ff00;
+            color: #000; padding: 30px 60px; border-radius: 20px;
+            font-size: 2em; font-weight: bold; z-index: 2000;
+            display: none; box-shadow: 0 0 50px rgba(0,255,0,0.9);
+            border: 4px solid #00ff00;
         }
         #notification.show { display: block; animation: slideDown 0.5s ease; }
-        @keyframes slideDown { from { top: -100px; opacity: 0; } to { top: 80px; opacity: 1; } }
+        @keyframes slideDown { from { top: -150px; opacity: 0; } to { top: 100px; opacity: 1; } }
         
         #inventory {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
             background: rgba(0,0,0,0.9); border: 3px solid #ffd700;
-            padding: 20px; border-radius: 15px; z-index: 100;
-            display: flex; gap: 12px;
-            box-shadow: 0 0 30px rgba(255,215,0,0.3);
+            padding: 25px; border-radius: 20px; z-index: 100;
+            display: flex; gap: 15px;
+            box-shadow: 0 0 40px rgba(255,215,0,0.5);
+            backdrop-filter: blur(10px);
         }
         
         .inv-slot {
-            width: 75px; height: 75px; background: rgba(255,255,255,0.1);
-            border: 2px solid #666; border-radius: 10px; display: flex;
+            width: 85px; height: 85px; background: rgba(255,255,255,0.1);
+            border: 3px solid #666; border-radius: 12px; display: flex;
             flex-direction: column; align-items: center; justify-content: center;
             transition: all 0.3s;
         }
-        .inv-slot.filled { border-color: #00ff00; background: rgba(0,255,0,0.2); }
-        .inv-slot img { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; }
-        .inv-slot .name { font-size: 0.65em; color: #fff; margin-top: 3px; text-align: center; font-weight: bold; }
+        .inv-slot.filled { 
+            border-color: #00ff00; 
+            background: rgba(0,255,0,0.2);
+            box-shadow: 0 0 20px rgba(0,255,0,0.7);
+        }
+        .inv-slot img { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; border: 3px solid #fff; }
+        .inv-slot .name { font-size: 0.7em; color: #fff; margin-top: 5px; text-align: center; font-weight: bold; }
         
         #interactHint {
-            position: fixed; bottom: 140px; left: 50%; transform: translateX(-50%);
-            background: rgba(0,0,0,0.9); border: 2px solid #00f3ff;
-            padding: 15px 30px; border-radius: 10px; color: #fff; 
-            font-size: 1.3em; z-index: 100; display: none;
+            position: fixed; bottom: 160px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.9); border: 3px solid #00f3ff;
+            padding: 20px 40px; border-radius: 15px; color: #fff; 
+            font-size: 1.5em; z-index: 100; display: none;
+            box-shadow: 0 0 30px rgba(0,243,255,0.7);
         }
-        #interactHint.show { display: block; }
+        #interactHint.show { display: block; animation: pulse 1s infinite; }
+        @keyframes pulse { 0%,100% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.05); } }
         
         #finalScreen {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, #000 0%, #1a0033 100%);
+            background: radial-gradient(ellipse at center, #1a0033 0%, #000 100%);
             z-index: 3000; overflow-y: auto; padding: 50px 20px; 
             color: #fff; text-align: center;
         }
-        #finalScreen h2 { font-size: 3.5em; color: #00ff00; text-shadow: 0 0 30px #00ff00; margin-bottom: 30px; }
-        #finalScreen .stats { background: rgba(0,255,0,0.1); border: 2px solid #00ff00; padding: 35px; margin: 30px auto; max-width: 600px; border-radius: 15px; font-size: 1.3em; }
+        #finalScreen h2 { font-size: 4em; color: #00ff00; text-shadow: 0 0 40px #00ff00; margin-bottom: 30px; }
+        #finalScreen .stats { background: rgba(0,255,0,0.15); border: 3px solid #00ff00; padding: 40px; margin: 30px auto; max-width: 650px; border-radius: 20px; font-size: 1.4em; box-shadow: 0 0 30px rgba(0,255,0,0.5); }
         #finalScreen .stats p { margin: 15px 0; }
-        #finalScreen .code { background: #000; border: 3px solid #ffd700; padding: 25px; font-size: 2.5em; color: #ffd700; letter-spacing: 8px; margin: 30px auto; max-width: 600px; border-radius: 10px; font-weight: bold; }
-        #finalScreen .instructions { background: rgba(255,105,180,0.1); border: 2px solid #ff69b4; padding: 35px; margin: 30px auto; max-width: 700px; text-align: left; border-radius: 15px; }
-        #finalScreen .instructions h3 { color: #ff69b4; margin-bottom: 20px; font-size: 1.5em; }
-        #finalScreen .instructions ol { margin-left: 25px; line-height: 2; font-size: 1.1em; }
-        #finalScreen button { background: linear-gradient(45deg, #ff69b4, #00f3ff); color: #000; border: none; padding: 25px 70px; font-size: 1.8em; font-weight: bold; cursor: pointer; margin-top: 30px; border-radius: 50px; }
+        #finalScreen .code { background: #000; border: 4px solid #ffd700; padding: 30px; font-size: 3em; color: #ffd700; letter-spacing: 10px; margin: 30px auto; max-width: 700px; border-radius: 15px; font-weight: bold; box-shadow: 0 0 40px rgba(255,215,0,0.6); }
+        #finalScreen .instructions { background: rgba(255,105,180,0.15); border: 3px solid #ff69b4; padding: 40px; margin: 30px auto; max-width: 750px; text-align: left; border-radius: 20px; }
+        #finalScreen .instructions h3 { color: #ff69b4; margin-bottom: 25px; font-size: 1.8em; }
+        #finalScreen .instructions ol { margin-left: 30px; line-height: 2.2; font-size: 1.2em; }
+        #finalScreen button { background: linear-gradient(45deg, #ff69b4, #00f3ff); color: #000; border: none; padding: 30px 80px; font-size: 2em; font-weight: bold; cursor: pointer; margin-top: 40px; border-radius: 60px; box-shadow: 0 0 40px rgba(255,105,180,0.7); }
     </style>
 </head>
 <body>
     <div id="blocker">
         <h1>LIMEX THE HUNT 1</h1>
-        <p style="font-size: 1.5em; color: #ff69b4;">[ 3D МИР - НАЙДИ ВСЕХ ]</p>
+        <p style="font-size: 1.8em; color: #ff69b4;">[ ULTRA 3D WORLD ]</p>
         <div class="controls">
             <p>🎮 <strong>W A S D</strong> — движение</p>
             <p>🖱️ <strong>Мышь</strong> — обзор (кликни для захвата)</p>
-            <p>🖱️ <strong>ЛКМ</strong> — собрать аватарку (подойди близко и наведи прицел)</p>
-            <p>🚪 <strong>E</strong> — войти в портал/дверь</p>
+            <p>🎯 <strong>ЛКМ</strong> — собрать аватарку (подойди близко)</p>
+            <p> <strong>E</strong> — войти в портал/дверь</p>
         </div>
-        <p style="color: #ffd700; font-size: 1.2em;">Собери все 12 аватарок!</p>
+        <p style="color: #ffd700; font-size: 1.4em;">Собери все 12 аватарок!</p>
         <button id="startBtn">НАЧАТЬ ИГРУ</button>
     </div>
     
     <div id="hud">
         <div class="counter">СОБРАНО: <span id="count">0</span> / 12</div>
-        <div class="location" id="location"> САКУРА</div>
+        <div class="location" id="location">🌸 САКУРА</div>
         <div class="timer" id="timer">00:00</div>
     </div>
     
@@ -155,11 +169,11 @@
         <h2>🎉 ВСЕ СОБРАНЫ! 🎉</h2>
         <div class="stats">
             <p><strong>⏱️ Время:</strong> <span id="finalTime">00:00</span></p>
-            <p><strong>👥 Собрано:</strong> 12 / 12</p>
+            <p><strong> Собрано:</strong> 12 / 12</p>
         </div>
         <div class="code" id="accessCode">LIMEX-XXXX-XXXX</div>
         <div class="instructions">
-            <h3>📸 КАК ПОЛУЧИТЬ ПРИЗ:</h3>
+            <h3> КАК ПОЛУЧИТЬ ПРИЗ:</h3>
             <ol>
                 <li>Сделай скриншот этого экрана</li>
                 <li>Сделай скриншот инвентаря</li>
@@ -171,32 +185,34 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
+        // ==================== ДАННЫЕ ПЕРСОНАЖЕЙ ====================
         const characters = [
-            { id: 1, name: 'CATGIRL', avatar: 'avatars/catgirl.png', scene: 'sakura', pos: [-12, 3, -18] },
-            { id: 2, name: 'TRICLY', avatar: 'avatars/tricly.png', scene: 'sakura', pos: [18, 2.5, -22] },
-            { id: 3, name: 'ХОЗЯИН', avatar: 'avatars/hozyain.png', scene: 'sakura', pos: [12, 3, -18] },
-            { id: 4, name: 'LimuStudios', avatar: 'avatars/limustudios.png', scene: 'matrix', pos: [-25, 3, -30] },
-            { id: 5, name: 'Lisudobot', avatar: 'avatars/lisudobot.png', scene: 'matrix', pos: [28, 2, 25] },
-            { id: 6, name: 'принц_цьмы', avatar: 'avatars/princ_tmy.png', scene: 'darkness', pos: [-30, 4, -25] },
-            { id: 7, name: 'k1lonchik', avatar: 'avatars/k1lonchik.png', scene: 'darkness', pos: [32, 2, 28] },
-            { id: 8, name: 'dark angel', avatar: 'avatars/dark_angel.png', scene: 'darkness', pos: [-28, 5, 30] },
-            { id: 9, name: 'LEGENDARCHYK', avatar: 'avatars/legendarchyk.png', scene: 'garden', pos: [15, 12, -12] },
-            { id: 10, name: 'sopilka00', avatar: 'avatars/sopilka00.png', scene: 'garden', pos: [-18, 2, 20] },
-            { id: 11, name: 'потужность', avatar: 'avatars/potuzhnost.png', scene: 'garden', pos: [15, 14, -12] },
-            { id: 12, name: 'Loli', avatar: 'avatars/loli.png', scene: 'minecraft', pos: [-8, 3, 8] }
+            { id: 1, name: 'CATGIRL', avatar: 'avatars/catgirl.png', scene: 'sakura', pos: [-15, 3.5, -20] },
+            { id: 2, name: 'TRICLY', avatar: 'avatars/tricly.png', scene: 'sakura', pos: [20, 2.8, -25] },
+            { id: 3, name: 'ХОЗЯИН', avatar: 'avatars/hozyain.png', scene: 'sakura', pos: [15, 3.5, -20] },
+            { id: 4, name: 'LimuStudios', avatar: 'avatars/limustudios.png', scene: 'matrix', pos: [-30, 4, -35] },
+            { id: 5, name: 'Lisudobot', avatar: 'avatars/lisudobot.png', scene: 'matrix', pos: [32, 3, 28] },
+            { id: 6, name: 'принц_цьмы', avatar: 'avatars/princ_tmy.png', scene: 'darkness', pos: [-35, 5, -28] },
+            { id: 7, name: 'k1lonchik', avatar: 'avatars/k1lonchik.png', scene: 'darkness', pos: [35, 3, 30] },
+            { id: 8, name: 'dark angel', avatar: 'avatars/dark_angel.png', scene: 'darkness', pos: [-30, 6, 32] },
+            { id: 9, name: 'LEGENDARCHYK', avatar: 'avatars/legendarchyk.png', scene: 'garden', pos: [18, 14, -15] },
+            { id: 10, name: 'sopilka00', avatar: 'avatars/sopilka00.png', scene: 'garden', pos: [-22, 2.5, 22] },
+            { id: 11, name: 'потужность', avatar: 'avatars/potuzhnost.png', scene: 'garden', pos: [18, 16, -15] },
+            { id: 12, name: 'Loli', avatar: 'avatars/loli.png', scene: 'minecraft', pos: [-10, 4, 10] }
         ];
 
         const scenes = {
-            'sakura': { name: '🌸 САКУРА', color: 0xffb7c5, next: 'house', portalPos: [0, 0, -35], portalType: 'house' },
-            'house': { name: '🏠 ДОМ', color: 0x8b7355, next: 'matrix', portalPos: [0, 0, -10], portalType: 'computer' },
+            'sakura': { name: '🌸 САКУРА', color: 0xffb7c5, next: 'house', portalPos: [0, 0, -40], portalType: 'house' },
+            'house': { name: '🏠 ДОМ', color: 0xd2b48c, next: 'matrix', portalPos: [0, 0, -12], portalType: 'computer' },
             'matrix': { name: '💚 МАТРИЦА', color: 0x000000, next: 'darkness', portalPos: [0, -5, 0], portalType: 'abyss' },
-            'darkness': { name: '🌑 ТЬМА', color: 0x1a0033, next: 'sakura', portalPos: [0, -5, 0], portalType: 'spikes' },
-            'garden': { name: '🌿 САД', color: 0x90ee90, next: 'minecraft', portalPos: [35, 0, 0], portalType: 'portal' },
+            'darkness': { name: '🌑 ТЬМА', color: 0x0a0014, next: 'sakura', portalPos: [0, -5, 0], portalType: 'spikes' },
+            'garden': { name: '🌿 САД', color: 0x87ceeb, next: 'minecraft', portalPos: [40, 0, 0], portalType: 'portal' },
             'minecraft': { name: '⛏️ МАЙНКРАФТ', color: 0x87ceeb, next: null, portalPos: null, portalType: null }
         };
 
+        // ==================== ПЕРЕМЕННЫЕ ====================
         let scene, camera, renderer;
-        let player = { x: 0, y: 2, z: 5, angle: 0, pitch: 0, velocity: new THREE.Vector3() };
+        let player = { x: 0, y: 2, z: 5, angle: 0, pitch: 0 };
         let keys = {};
         let collected = [];
         let currentScene = 'sakura';
@@ -206,21 +222,21 @@
         let timerInterval = null;
         let isLocked = false;
         let textureLoader = new THREE.TextureLoader();
+        let animatedObjects = [];
+        let matrixRainDrops = [];
+        let particles = [];
 
+        // ==================== ИНИЦИАЛИЗАЦИЯ ====================
         function init() {
             scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            renderer = new THREE.WebGLRenderer({ antialias: true });
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1500);
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.2;
             document.body.appendChild(renderer.domElement);
-
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-            scene.add(ambientLight);
-            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            dirLight.position.set(10, 20, 10);
-            dirLight.castShadow = true;
-            scene.add(dirLight);
 
             document.addEventListener('keydown', (e) => {
                 keys[e.key.toLowerCase()] = true;
@@ -232,7 +248,7 @@
                 if (isLocked) {
                     player.angle -= e.movementX * 0.002;
                     player.pitch -= e.movementY * 0.002;
-                    player.pitch = Math.max(-Math.PI/2, Math.min(Math.PI/2, player.pitch));
+                    player.pitch = Math.max(-Math.PI/2.2, Math.min(Math.PI/2.2, player.pitch));
                 }
             });
 
@@ -286,7 +302,7 @@
                 }
             }
         }
-
+        // ==================== ЗАГРУЗКА СЦЕНЫ ====================
         function loadScene(sceneName) {
             currentScene = sceneName;
             const sceneData = scenes[sceneName];
@@ -294,15 +310,28 @@
             while(scene.children.length > 0) scene.remove(scene.children[0]);
             objects = [];
             portal = null;
+            animatedObjects = [];
+            matrixRainDrops = [];
+            particles = [];
 
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            // Освещение
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
             scene.add(ambientLight);
-            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            dirLight.position.set(10, 20, 10);
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.9);
+            dirLight.position.set(20, 30, 10);
             dirLight.castShadow = true;
+            dirLight.shadow.mapSize.width = 2048;
+            dirLight.shadow.mapSize.height = 2048;
+            dirLight.shadow.camera.near = 0.5;
+            dirLight.shadow.camera.far = 200;
+            dirLight.shadow.camera.left = -60;
+            dirLight.shadow.camera.right = 60;
+            dirLight.shadow.camera.top = 60;
+            dirLight.shadow.camera.bottom = -60;
             scene.add(dirLight);
 
-            const floorGeo = new THREE.PlaneGeometry(120, 120);
+            // Пол с текстурой
+            const floorGeo = new THREE.PlaneGeometry(200, 200, 50, 50);
             const floorMat = new THREE.MeshLambertMaterial({ color: sceneData.color });
             const floor = new THREE.Mesh(floorGeo, floorMat);
             floor.rotation.x = -Math.PI / 2;
@@ -310,7 +339,7 @@
             scene.add(floor);
 
             scene.background = new THREE.Color(sceneData.color);
-            scene.fog = new THREE.Fog(sceneData.color, 40, 100);
+            scene.fog = new THREE.Fog(sceneData.color, 50, 150);
 
             addDecorations(sceneName);
 
@@ -325,7 +354,7 @@
             }
 
             player.x = 0;
-            player.z = 5;
+            player.z = 8;
             player.y = 2;
             player.angle = 0;
             player.pitch = 0;
@@ -333,444 +362,1436 @@
             document.getElementById('location').textContent = sceneData.name;
         }
 
+        // ==================== ДЕКОРАЦИИ ====================
         function addDecorations(sceneName) {
-            if (sceneName === 'sakura') {
-                // Много деревьев сакуры
-                for (let i = 0; i < 25; i++) {
-                    const x = (Math.random() - 0.5) * 100;
-                    const z = (Math.random() - 0.5) * 100;
-                    
-                    const trunk = new THREE.Mesh(
-                        new THREE.CylinderGeometry(0.5, 0.7, 6, 8),
-                        new THREE.MeshLambertMaterial({ color: 0x4a2511 })
-                    );
-                    trunk.position.set(x, 3, z);
-                    trunk.castShadow = true;
-                    scene.add(trunk);
+            if (sceneName === 'sakura') buildSakura();
+            else if (sceneName === 'house') buildHouse();
+            else if (sceneName === 'matrix') buildMatrix();
+            else if (sceneName === 'darkness') buildDarkness();
+            else if (sceneName === 'garden') buildGarden();
+            else if (sceneName === 'minecraft') buildMinecraft();
+        }
 
-                    const leaves = new THREE.Mesh(
-                        new THREE.SphereGeometry(4, 16, 16),
-                        new THREE.MeshLambertMaterial({ color: 0xff69b4 })
-                    );
-                    leaves.position.set(x, 7, z);
-                    leaves.castShadow = true;
-                    scene.add(leaves);
-                }
+        // ---------- САКУРА ----------
+        function buildSakura() {
+            // 30 детализированных деревьев сакуры
+            for (let i = 0; i < 30; i++) {
+                const x = (Math.random() - 0.5) * 160;
+                const z = (Math.random() - 0.5) * 160;
+                if (Math.abs(x) < 8 && Math.abs(z + 40) < 10) continue; // Не ставим на портал
+                buildDetailedSakuraTree(x, z, 0.8 + Math.random() * 0.5);
+            }
 
-                // Качели 1 (CATGIRL)
-                createSwing(-12, -18);
-                // Качели 2 (ХОЗЯИН)
-                createSwing(12, -18);
+            // Качели 1 (CATGIRL)
+            buildDetailedSwing(-15, -20, 0xff69b4);
+            // Качели 2 (ХОЗЯИН)
+            buildDetailedSwing(15, -20, 0xff1493);
 
-                // Беседка (TRICLY)
-                createGazebo(18, -22);
+            // Беседка (TRICLY)
+            buildDetailedGazebo(20, -25);
 
-                // Дом
-                const house = new THREE.Mesh(
-                    new THREE.BoxGeometry(12, 10, 12),
-                    new THREE.MeshLambertMaterial({ color: 0x8b4513 })
+            // Дом
+            buildDetailedHouse(0, -40);
+
+            // Забор по периметру
+            buildFence(-80, 80, -80, 80);
+
+            // Скамейки
+            for (let i = 0; i < 8; i++) {
+                buildBench((Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100);
+            }
+
+            // Фонтан в центре
+            buildFountain(-25, 15);
+
+            // Пруд с лилиями
+            buildPond(25, 20);
+
+            // Камни
+            for (let i = 0; i < 15; i++) {
+                buildRock((Math.random() - 0.5) * 120, (Math.random() - 0.5) * 120);
+            }
+
+            // Лепестки сакуры (частицы)
+            for (let i = 0; i < 200; i++) {
+                const petal = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.15, 6, 6),
+                    new THREE.MeshBasicMaterial({ color: 0xffb7c5, transparent: true, opacity: 0.8 })
                 );
-                house.position.set(0, 5, -35);
-                house.castShadow = true;
-                scene.add(house);
-
-                const roof = new THREE.Mesh(
-                    new THREE.ConeGeometry(8, 5, 4),
-                    new THREE.MeshLambertMaterial({ color: 0x654321 })
+                petal.position.set(
+                    (Math.random() - 0.5) * 150,
+                    Math.random() * 20 + 5,
+                    (Math.random() - 0.5) * 150
                 );
-                roof.position.set(0, 12, -35);
-                roof.rotation.y = Math.PI / 4;
-                scene.add(roof);
+                petal.userData = {
+                    velocity: new THREE.Vector3(
+                        (Math.random() - 0.5) * 0.02,
+                        -0.02 - Math.random() * 0.03,
+                        (Math.random() - 0.5) * 0.02
+                    ),
+                    rotSpeed: Math.random() * 0.05
+                };
+                scene.add(petal);
+                particles.push(petal);
+            }
 
-                // Забор
-                for (let i = -40; i <= 40; i += 5) {
-                    const fence = new THREE.Mesh(
-                        new THREE.BoxGeometry(0.3, 3, 0.3),
-                        new THREE.MeshLambertMaterial({ color: 0x8b4513 })
-                    );
-                    fence.position.set(i, 1.5, 40);
-                    scene.add(fence);
-                }
-
-                // Скамейки
-                for (let i = 0; i < 5; i++) {
-                    const bench = new THREE.Mesh(
-                        new THREE.BoxGeometry(3, 0.5, 1),
-                        new THREE.MeshLambertMaterial({ color: 0x654321 })
-                    );
-                    bench.position.set((Math.random() - 0.5) * 60, 0.5, (Math.random() - 0.5) * 60);
-                    scene.add(bench);
-                }
-
-                // Фонтан
-                const fountain = new THREE.Mesh(
-                    new THREE.CylinderGeometry(3, 3, 1, 16),
-                    new THREE.MeshLambertMaterial({ color: 0x888888 })
+            // Светлячки
+            for (let i = 0; i < 30; i++) {
+                const firefly = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.1, 8, 8),
+                    new THREE.MeshBasicMaterial({ color: 0xffff00 })
                 );
-                fountain.position.set(-20, 0.5, 10);
-                scene.add(fountain);
-            } else if (sceneName === 'house') {
-                // Стены
-                const wallMat = new THREE.MeshLambertMaterial({ color: 0xd2b48c });
-                const wall1 = new THREE.Mesh(new THREE.BoxGeometry(30, 12, 1), wallMat);
-                wall1.position.set(0, 6, -15);
-                wall1.castShadow = true;
-                scene.add(wall1);
-                const wall2 = wall1.clone();
-                wall2.position.z = 15;
-                scene.add(wall2);
-                const wall3 = new THREE.Mesh(new THREE.BoxGeometry(1, 12, 30), wallMat);
-                wall3.position.set(-15, 6, 0);
-                wall3.castShadow = true;
-                scene.add(wall3);
-                const wall4 = wall3.clone();
-                wall4.position.x = 15;
-                scene.add(wall4);
-
-                // Пол
-                const houseFloor = new THREE.Mesh(
-                    new THREE.PlaneGeometry(29, 29),
-                    new THREE.MeshLambertMaterial({ color: 0x8b7355 })
+                firefly.position.set(
+                    (Math.random() - 0.5) * 100,
+                    1 + Math.random() * 3,
+                    (Math.random() - 0.5) * 100
                 );
-                houseFloor.rotation.x = -Math.PI / 2;
-                houseFloor.position.y = 0.1;
-                scene.add(houseFloor);
+                const light = new THREE.PointLight(0xffff00, 0.5, 3);
+                firefly.add(light);
+                firefly.userData = {
+                    baseY: firefly.position.y,
+                    phase: Math.random() * Math.PI * 2
+                };
+                scene.add(firefly);
+                animatedObjects.push({ type: 'firefly', obj: firefly });
+            }
+        }
 
-                // Потолок
-                const ceiling = new THREE.Mesh(
-                    new THREE.PlaneGeometry(29, 29),
-                    new THREE.MeshLambertMaterial({ color: 0xd2b48c })
+        function buildDetailedSakuraTree(x, z, scale) {
+            const group = new THREE.Group();
+            
+            // Ствол
+            const trunkGeo = new THREE.CylinderGeometry(0.4 * scale, 0.7 * scale, 6 * scale, 12);
+            const trunkMat = new THREE.MeshLambertMaterial({ color: 0x4a2511 });
+            const trunk = new THREE.Mesh(trunkGeo, trunkMat);
+            trunk.position.y = 3 * scale;
+            trunk.castShadow = true;
+            group.add(trunk);
+
+            // Ветви
+            for (let i = 0; i < 5; i++) {
+                const branch = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.15 * scale, 0.25 * scale, 3 * scale, 6),
+                    trunkMat
                 );
-                ceiling.rotation.x = Math.PI / 2;
-                ceiling.position.y = 12;
-                scene.add(ceiling);
+                branch.position.y = 4 * scale + i * 0.5 * scale;
+                branch.rotation.z = (Math.random() - 0.5) * 1.5;
+                branch.rotation.x = (Math.random() - 0.5) * 1.5;
+                branch.castShadow = true;
+                group.add(branch);
+            }
 
-                // Компьютерный стол
-                const desk = new THREE.Mesh(
-                    new THREE.BoxGeometry(5, 1, 3),
-                    new THREE.MeshLambertMaterial({ color: 0x654321 })
-                );
-                desk.position.set(0, 1, -13);
-                scene.add(desk);
-
-                // Монитор
-                const monitor = new THREE.Mesh(
-                    new THREE.BoxGeometry(4, 3, 0.3),
-                    new THREE.MeshBasicMaterial({ color: 0x00ff00 })
-                );
-                monitor.position.set(0, 3, -13);
-                scene.add(monitor);
-
-                const screenGlow = new THREE.PointLight(0x00ff00, 2, 8);
-                screenGlow.position.set(0, 3, -12);
-                scene.add(screenGlow);
-
-                // Стул
-                const chair = new THREE.Mesh(
-                    new THREE.BoxGeometry(1.5, 2, 1.5),
-                    new THREE.MeshLambertMaterial({ color: 0x333333 })
-                );
-                chair.position.set(0, 1, -10);
-                scene.add(chair);
-
-                // Книжные полки
-                for (let i = 0; i < 3; i++) {
-                    const shelf = new THREE.Mesh(
-                        new THREE.BoxGeometry(4, 6, 0.5),
-                        new THREE.MeshLambertMaterial({ color: 0x654321 })
-                    );
-                    shelf.position.set(-12, 3, -10 + i * 5);
-                    scene.add(shelf);
-                }
-            } else if (sceneName === 'matrix') {
-                // Зелёный дождь
-                for (let i = 0; i < 80; i++) {
-                    const col = new THREE.Mesh(
-                        new THREE.CylinderGeometry(0.08, 0.08, 40, 4),
-                        new THREE.MeshBasicMaterial({ 
-                            color: 0x00ff00, 
-                            transparent: true, 
-                            opacity: 0.3 + Math.random() * 0.4 
-                        })
-                    );
-                    col.position.set(
-                        (Math.random() - 0.5) * 100,
-                        20,
-                        (Math.random() - 0.5) * 100
-                    );
-                    scene.add(col);
-                }
-
-                // Светящиеся частицы
-                for (let i = 0; i < 150; i++) {
-                    const particle = new THREE.Mesh(
-                        new THREE.SphereGeometry(0.15, 8, 8),
-                        new THREE.MeshBasicMaterial({ color: 0x00ff00 })
-                    );
-                    particle.position.set(
-                        (Math.random() - 0.5) * 100,
-                        Math.random() * 25,
-                        (Math.random() - 0.5) * 100
-                    );
-                    scene.add(particle);
-                }
-
-                // Платформы
-                for (let i = 0; i < 10; i++) {
-                    const platform = new THREE.Mesh(
-                        new THREE.BoxGeometry(5, 0.5, 5),
-                        new THREE.MeshLambertMaterial({ color: 0x003300 })
-                    );
-                    platform.position.set(
-                        (Math.random() - 0.5) * 80,
-                        Math.random() * 10,
-                        (Math.random() - 0.5) * 80
-                    );
-                    scene.add(platform);
-                }
-            } else if (sceneName === 'darkness') {
-                // Тёмные столбы
-                for (let i = 0; i < 40; i++) {
-                    const pillar = new THREE.Mesh(
-                        new THREE.CylinderGeometry(2, 2, 25, 8),
-                        new THREE.MeshLambertMaterial({ color: 0x1a0033 })
-                    );
-                    pillar.position.set(
-                        (Math.random() - 0.5) * 100,
-                        12.5,
-                        (Math.random() - 0.5) * 100
-                    );
-                    pillar.castShadow = true;
-                    scene.add(pillar);
-                }
-
-                // Фиолетовые частицы
-                for (let i = 0; i < 120; i++) {
-                    const particle = new THREE.Mesh(
-                        new THREE.SphereGeometry(0.2, 8, 8),
-                        new THREE.MeshBasicMaterial({ 
-                            color: 0x9400d3,
-                            transparent: true,
-                            opacity: 0.6
-                        })
-                    );
-                    particle.position.set(
-                        (Math.random() - 0.5) * 100,
-                        Math.random() * 20,
-                        (Math.random() - 0.5) * 100
-                    );
-                    scene.add(particle);
-                }
-
-                // Руины
-                for (let i = 0; i < 15; i++) {
-                    const ruin = new THREE.Mesh(
-                        new THREE.BoxGeometry(
-                            2 + Math.random() * 3,
-                            3 + Math.random() * 5,
-                            2 + Math.random() * 3
-                        ),
-                        new THREE.MeshLambertMaterial({ color: 0x2a0043 })
-                    );
-                    ruin.position.set(
-                        (Math.random() - 0.5) * 80,
-                        2,
-                        (Math.random() - 0.5) * 80
-                    );
-                    ruin.rotation.y = Math.random() * Math.PI;
-                    scene.add(ruin);
-                }
-            } else if (sceneName === 'garden') {
-                // Деревья
-                for (let i = 0; i < 20; i++) {
-                    const x = (Math.random() - 0.5) * 90;
-                    const z = (Math.random() - 0.5) * 90;
-                    
-                    const trunk = new THREE.Mesh(
-                        new THREE.CylinderGeometry(0.7, 0.9, 5, 8),
-                        new THREE.MeshLambertMaterial({ color: 0x4a2511 })
-                    );
-                    trunk.position.set(x, 2.5, z);
-                    trunk.castShadow = true;
-                    scene.add(trunk);
-
-                    const leaves = new THREE.Mesh(
-                        new THREE.SphereGeometry(3.5, 16, 16),
-                        new THREE.MeshLambertMaterial({ color: 0x228b22 })
-                    );
-                    leaves.position.set(x, 6, z);
-                    leaves.castShadow = true;
-                    scene.add(leaves);
-                }
-
-                // Большое дерево для LEGENDARCHYK и потужность
-                const bigTrunk = new THREE.Mesh(
-                    new THREE.CylinderGeometry(1.5, 2, 12, 12),
-                    new THREE.MeshLambertMaterial({ color: 0x4a2511 })
-                );
-                bigTrunk.position.set(15, 6, -12);
-                bigTrunk.castShadow = true;
-                scene.add(bigTrunk);
-
-                const bigLeaves = new THREE.Mesh(
-                    new THREE.SphereGeometry(7, 16, 16),
-                    new THREE.MeshLambertMaterial({ color: 0x228b22 })
-                );
-                bigLeaves.position.set(15, 14, -12);
-                bigLeaves.castShadow = true;
-                scene.add(bigLeaves);
-
-                // Помидоры
-                for (let i = 0; i < 30; i++) {
-                    const tomato = new THREE.Mesh(
-                        new THREE.SphereGeometry(0.5, 8, 8),
-                        new THREE.MeshLambertMaterial({ color: 0xff0000 })
-                    );
-                    tomato.position.set(
-                        (Math.random() - 0.5) * 60,
-                        0.5,
-                        (Math.random() - 0.5) * 60
-                    );
-                    scene.add(tomato);
-                }
-
-                // Забор сада
-                for (let i = -45; i <= 45; i += 4) {
-                    const fence = new THREE.Mesh(
-                        new THREE.BoxGeometry(0.4, 3, 0.4),
-                        new THREE.MeshLambertMaterial({ color: 0x8b4513 })
-                    );
-                    fence.position.set(i, 1.5, 45);
-                    scene.add(fence);
-                }
-
-                // Скамейка
-                const bench = new THREE.Mesh(
-                    new THREE.BoxGeometry(4, 0.6, 1.5),
-                    new THREE.MeshLambertMaterial({ color: 0x654321 })
-                );
-                bench.position.set(-25, 0.3, 10);
-                scene.add(bench);
-            } else if (sceneName === 'minecraft') {
-                // Блоки земли
-                for (let x = -30; x <= 30; x += 2) {
-                    for (let z = -30; z <= 30; z += 2) {
-                        const block = new THREE.Mesh(
-                            new THREE.BoxGeometry(2, 2, 2),
-                            new THREE.MeshLambertMaterial({ color: 0x8b4513 })
-                        );
-                        block.position.set(x, 1, z);
-                        block.castShadow = true;
-                        block.receiveShadow = true;
-                        scene.add(block);
-                    }
-                }
-
-                // Дерево
-                const trunk = new THREE.Mesh(
-                    new THREE.BoxGeometry(2, 10, 2),
-                    new THREE.MeshLambertMaterial({ color: 0x654321 })
-                );
-                trunk.position.set(0, 5, 0);
-                trunk.castShadow = true;
-                scene.add(trunk);
-
+            // Крона из нескольких сфер
+            const leafMat = new THREE.MeshLambertMaterial({ color: 0xff69b4 });
+            const leafMat2 = new THREE.MeshLambertMaterial({ color: 0xffb7c5 });
+            const positions = [
+                [0, 7, 0, 3.5],
+                [-2, 6.5, 1, 2.5],
+                [2, 6.5, -1, 2.5],
+                [1, 8, 1, 2],
+                [-1, 8, -1, 2]
+            ];
+            positions.forEach(([px, py, pz, r], idx) => {
                 const leaves = new THREE.Mesh(
-                    new THREE.BoxGeometry(6, 6, 6),
-                    new THREE.MeshLambertMaterial({ color: 0x228b22 })
+                    new THREE.SphereGeometry(r * scale, 16, 16),
+                    idx % 2 === 0 ? leafMat : leafMat2
                 );
-                leaves.position.set(0, 11, 0);
+                leaves.position.set(px * scale, py * scale, pz * scale);
                 leaves.castShadow = true;
-                scene.add(leaves);
+                group.add(leaves);
+            });
 
-                // Дополнительные деревья
-                for (let i = 0; i < 5; i++) {
-                    const t = new THREE.Mesh(
-                        new THREE.BoxGeometry(1.5, 8, 1.5),
-                        new THREE.MeshLambertMaterial({ color: 0x654321 })
-                    );
-                    t.position.set((Math.random() - 0.5) * 50, 4, (Math.random() - 0.5) * 50);
-                    scene.add(t);
+            group.position.set(x, 0, z);
+            scene.add(group);
+        }
 
-                    const l = new THREE.Mesh(
-                        new THREE.BoxGeometry(5, 5, 5),
-                        new THREE.MeshLambertMaterial({ color: 0x228b22 })
-                    );
-                    l.position.copy(t.position);
-                    l.position.y += 6;
-                    scene.add(l);
+        function buildDetailedSwing(x, z, color) {
+            const group = new THREE.Group();
+            const woodMat = new THREE.MeshLambertMaterial({ color: 0x654321 });
+            const metalMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
+            const seatMat = new THREE.MeshLambertMaterial({ color: color });
+
+            // Две А-образные стойки
+            for (let side = -1; side <= 1; side += 2) {
+                const leg1 = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 5, 8), woodMat);
+                leg1.position.set(side * 2, 2.5, -0.8);
+                leg1.rotation.z = side * 0.2;
+                leg1.castShadow = true;
+                group.add(leg1);
+
+                const leg2 = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 5, 8), woodMat);
+                leg2.position.set(side * 2, 2.5, 0.8);
+                leg2.rotation.z = -side * 0.2;
+                leg2.castShadow = true;
+                group.add(leg2);
+
+                // Перекладина между ногами
+                const crossbar = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 1.6, 6), woodMat);
+                crossbar.position.set(side * 2, 1, 0);
+                crossbar.rotation.x = Math.PI / 2;
+                group.add(crossbar);
+            }
+
+            // Верхняя перекладина
+            const topBar = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 5, 8), woodMat);
+            topBar.position.set(0, 5, 0);
+            topBar.rotation.z = Math.PI / 2;
+            topBar.castShadow = true;
+            group.add(topBar);
+
+            // Верёвки
+            for (let side = -1; side <= 1; side += 2) {
+                const rope = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 2.5, 6), metalMat);
+                rope.position.set(side * 1.2, 3.75, 0);
+                group.add(rope);
+            }
+
+            // Сиденье
+            const seat = new THREE.Mesh(new THREE.BoxGeometry(3, 0.3, 1), seatMat);
+            seat.position.set(0, 2.5, 0);
+            seat.castShadow = true;
+            group.add(seat);
+
+            group.position.set(x, 0, z);
+            scene.add(group);
+            animatedObjects.push({ type: 'swing', obj: group, phase: Math.random() * Math.PI * 2 });
+        }
+
+        function buildDetailedGazebo(x, z) {
+            const group = new THREE.Group();
+            const woodMat = new THREE.MeshLambertMaterial({ color: 0x8b4513 });
+            const roofMat = new THREE.MeshLambertMaterial({ color: 0x654321 });
+
+            // 8 колонн
+            for (let i = 0; i < 8; i++) {
+                const angle = (i / 8) * Math.PI * 2;
+                const px = Math.cos(angle) * 4;
+                const pz = Math.sin(angle) * 4;
+                const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 6, 12), woodMat);
+                pillar.position.set(px, 3, pz);
+                pillar.castShadow = true;
+                group.add(pillar);
+
+                // База колонны
+                const base = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 0.3, 12), woodMat);
+                base.position.set(px, 0.15, pz);
+                group.add(base);
+
+                // Капитель
+                const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.3, 0.3, 12), woodMat);
+                cap.position.set(px, 5.85, pz);
+                group.add(cap);
+            }
+
+            // Пол
+            const floor = new THREE.Mesh(new THREE.CylinderGeometry(4.5, 4.5, 0.3, 16), new THREE.MeshLambertMaterial({ color: 0xd2b48c }));
+            floor.position.y = 0.15;
+            group.add(floor);
+
+            // Крыша конусом
+            const roof = new THREE.Mesh(new THREE.ConeGeometry(5.5, 3, 8), roofMat);
+            roof.position.y = 7.5;
+            roof.castShadow = true;
+            group.add(roof);
+
+            // Верхушка крыши
+            const top = new THREE.Mesh(new THREE.SphereGeometry(0.5, 8, 8), new THREE.MeshLambertMaterial({ color: 0xffd700 }));
+            top.position.y = 9;
+            group.add(top);
+
+            // Стол внутри
+            const table = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 0.2, 12), woodMat);
+            table.position.y = 1;
+            group.add(table);
+            const tableLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 1, 8), woodMat);
+            tableLeg.position.y = 0.5;
+            group.add(tableLeg);
+
+            group.position.set(x, 0, z);
+            scene.add(group);
+        }
+
+        function buildDetailedHouse(x, z) {
+            const group = new THREE.Group();
+            const wallMat = new THREE.MeshLambertMaterial({ color: 0xf5deb3 });
+            const roofMat = new THREE.MeshLambertMaterial({ color: 0x8b0000 });
+            const woodMat = new THREE.MeshLambertMaterial({ color: 0x654321 });
+
+            // Основание дома
+            const base = new THREE.Mesh(new THREE.BoxGeometry(14, 10, 12), wallMat);
+            base.position.y = 5;
+            base.castShadow = true;
+            base.receiveShadow = true;
+            group.add(base);
+
+            // Крыша
+            const roof = new THREE.Mesh(new THREE.ConeGeometry(10, 5, 4), roofMat);
+            roof.position.y = 12.5;
+            roof.rotation.y = Math.PI / 4;
+            roof.castShadow = true;
+            group.add(roof);
+
+            // Дверь
+            const door = new THREE.Mesh(new THREE.BoxGeometry(2.5, 5, 0.3), woodMat);
+            door.position.set(0, 2.5, 6.1);
+            group.add(door);
+
+            // Ручка двери
+            const knob = new THREE.Mesh(new THREE.SphereGeometry(0.15, 8, 8), new THREE.MeshLambertMaterial({ color: 0xffd700 }));
+            knob.position.set(0.8, 2.5, 6.3);
+            group.add(knob);
+
+            // Окна
+            const windowMat = new THREE.MeshBasicMaterial({ color: 0x87ceeb });
+            const windowFrame = new THREE.MeshLambertMaterial({ color: 0x333333 });
+            const windowPositions = [[-4, 5, 6.1], [4, 5, 6.1], [-7, 5, 0], [7, 5, 0]];
+            windowPositions.forEach(([wx, wy, wz]) => {
+                const win = new THREE.Mesh(new THREE.BoxGeometry(2, 2, 0.2), windowMat);
+                win.position.set(wx, wy, wz);
+                if (Math.abs(wz) < 1) win.rotation.y = Math.PI / 2;
+                group.add(win);
+
+                // Рама
+                const frame = new THREE.Mesh(new THREE.BoxGeometry(2.3, 2.3, 0.15), windowFrame);
+                frame.position.copy(win.position);
+                frame.position.z += (wz > 0 ? -0.1 : 0.1);
+                if (Math.abs(wz) < 1) frame.rotation.y = Math.PI / 2;
+                group.add(frame);
+            });
+
+            // Труба
+            const chimney = new THREE.Mesh(new THREE.BoxGeometry(1.5, 4, 1.5), new THREE.MeshLambertMaterial({ color: 0x8b4513 }));
+            chimney.position.set(4, 13, -3);
+            chimney.castShadow = true;
+            group.add(chimney);
+
+            // Дым из трубы (частицы)
+            for (let i = 0; i < 20; i++) {
+                const smoke = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.5 + Math.random() * 0.5, 8, 8),
+                    new THREE.MeshBasicMaterial({ color: 0xcccccc, transparent: true, opacity: 0.4 })
+                );
+                smoke.position.set(4, 15 + i * 0.5, -3);
+                smoke.userData = { baseY: 15 + i * 0.5, phase: Math.random() * Math.PI * 2 };
+                group.add(smoke);
+                animatedObjects.push({ type: 'smoke', obj: smoke, parent: group });
+            }
+
+            // Крыльцо
+            const porch = new THREE.Mesh(new THREE.BoxGeometry(5, 0.3, 3), new THREE.MeshLambertMaterial({ color: 0x8b7355 }));
+            porch.position.set(0, 0.15, 7.5);
+            group.add(porch);
+
+            // Ступеньки
+            for (let i = 0; i < 3; i++) {
+                const step = new THREE.Mesh(new THREE.BoxGeometry(3, 0.3, 0.8), new THREE.MeshLambertMaterial({ color: 0x654321 }));
+                step.position.set(0, 0.15 + i * 0.3, 9 + i * 0.8);
+                group.add(step);
+            }
+
+            // Фонарь у двери
+            const lamp = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.8, 8), new THREE.MeshLambertMaterial({ color: 0x333333 }));
+            lamp.position.set(1.8, 4, 6.2);
+            group.add(lamp);
+            const lampLight = new THREE.PointLight(0xffaa00, 1, 5);
+            lampLight.position.set(1.8, 4.5, 6.5);
+            group.add(lampLight);
+
+            group.position.set(x, 0, z);
+            scene.add(group);
+        }
+
+        function buildFence(x1, x2, z1, z2) {
+            const fenceMat = new THREE.MeshLambertMaterial({ color: 0x8b4513 });
+            // По X
+            for (let x = x1; x <= x2; x += 4) {
+                for (let z of [z1, z2]) {
+                    const post = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 3, 8), fenceMat);
+                    post.position.set(x, 1.5, z);
+                    post.castShadow = true;
+                    scene.add(post);
+                }
+            }
+            // По Z
+            for (let z = z1; z <= z2; z += 4) {
+                for (let x of [x1, x2]) {
+                    const post = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 3, 8), fenceMat);
+                    post.position.set(x, 1.5, z);
+                    post.castShadow = true;
+                    scene.add(post);
+                }
+            }
+            // Горизонтальные планки
+            for (let y of [1, 2]) {
+                for (let x = x1; x <= x2; x += 4) {
+                    const plank = new THREE.Mesh(new THREE.BoxGeometry(4, 0.2, 0.1), fenceMat);
+                    plank.position.set(x, y, z1);
+                    scene.add(plank);
+                    const plank2 = plank.clone();
+                    plank2.position.z = z2;
+                    scene.add(plank2);
                 }
             }
         }
 
-        function createSwing(x, z) {
-            const pole1 = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.2, 0.2, 5, 8),
-                new THREE.MeshLambertMaterial({ color: 0x8b4513 })
-            );
-            pole1.position.set(x - 2, 2.5, z);
-            scene.add(pole1);
+        function buildBench(x, z) {
+            const group = new THREE.Group();
+            const woodMat = new THREE.MeshLambertMaterial({ color: 0x654321 });
+            const metalMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
 
-            const pole2 = pole1.clone();
-            pole2.position.x = x + 2;
-            scene.add(pole2);
+            // Сиденье
+            const seat = new THREE.Mesh(new THREE.BoxGeometry(3, 0.2, 1), woodMat);
+            seat.position.y = 0.8;
+            seat.castShadow = true;
+            group.add(seat);
 
-            const bar = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.15, 0.15, 4, 8),
-                new THREE.MeshLambertMaterial({ color: 0x8b4513 })
-            );
-            bar.rotation.z = Math.PI / 2;
-            bar.position.set(x, 5, z);
-            scene.add(bar);
+            // Спинка
+            const back = new THREE.Mesh(new THREE.BoxGeometry(3, 1.2, 0.2), woodMat);
+            back.position.set(0, 1.4, -0.4);
+            back.castShadow = true;
+            group.add(back);
 
-            const rope1 = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.05, 0.05, 2.5, 4),
-                new THREE.MeshLambertMaterial({ color: 0x333333 })
-            );
-            rope1.position.set(x - 1, 3.75, z);
-            scene.add(rope1);
+            // Ножки
+            for (let x of [-1.3, 1.3]) {
+                const leg = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.8, 1), metalMat);
+                leg.position.set(x, 0.4, 0);
+                group.add(leg);
+            }
 
-            const rope2 = rope1.clone();
-            rope2.position.x = x + 1;
-            scene.add(rope2);
-
-            const seat = new THREE.Mesh(
-                new THREE.BoxGeometry(2.5, 0.3, 1),
-                new THREE.MeshLambertMaterial({ color: 0x654321 })
-            );
-            seat.position.set(x, 2.5, z);
-            scene.add(seat);
+            group.position.set(x, 0, z);
+            group.rotation.y = Math.random() * Math.PI * 2;
+            scene.add(group);
         }
 
-        function createGazebo(x, z) {
-            const pillarMat = new THREE.MeshLambertMaterial({ color: 0x8b4513 });
-            const positions = [[-3, -3], [3, -3], [-3, 3], [3, 3]];
-            positions.forEach(([dx, dz]) => {
-                const pillar = new THREE.Mesh(
-                    new THREE.CylinderGeometry(0.4, 0.4, 6, 8),
-                    pillarMat
+        function buildFountain(x, z) {
+            const group = new THREE.Group();
+            const stoneMat = new THREE.MeshLambertMaterial({ color: 0x888888 });
+            const waterMat = new THREE.MeshBasicMaterial({ color: 0x00bfff, transparent: true, opacity: 0.7 });
+
+            // Бассейн
+            const basin = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 1, 24), stoneMat);
+            basin.position.y = 0.5;
+            basin.castShadow = true;
+            group.add(basin);
+
+            // Вода
+            const water = new THREE.Mesh(new THREE.CylinderGeometry(3.5, 3.5, 0.3, 24), waterMat);
+            water.position.y = 0.9;
+            group.add(water);
+
+            // Центральная колонна
+            const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.7, 3, 12), stoneMat);
+            pillar.position.y = 2.5;
+            pillar.castShadow = true;
+            group.add(pillar);
+
+            // Верхняя чаша
+            const topBowl = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1, 0.5, 16), stoneMat);
+            topBowl.position.y = 4;
+            group.add(topBowl);
+
+            // Статуя наверху
+            const statue = new THREE.Mesh(new THREE.SphereGeometry(0.8, 12, 12), new THREE.MeshLambertMaterial({ color: 0xd4af37 }));
+            statue.position.y = 5;
+            group.add(statue);
+
+            // Брызги воды (частицы)
+            for (let i = 0; i < 30; i++) {
+                const drop = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.1, 6, 6),
+                    new THREE.MeshBasicMaterial({ color: 0x00bfff, transparent: true, opacity: 0.8 })
                 );
-                pillar.position.set(x + dx, 3, z + dz);
-                pillar.castShadow = true;
-                scene.add(pillar);
+                drop.position.set(
+                    (Math.random() - 0.5) * 2,
+                    4.5 + Math.random(),
+                    (Math.random() - 0.5) * 2
+                );
+                drop.userData = { baseY: 4.5, phase: Math.random() * Math.PI * 2 };
+                group.add(drop);
+                animatedObjects.push({ type: 'waterdrop', obj: drop });
+            }
+
+            group.position.set(x, 0, z);
+            scene.add(group);
+        }
+
+        function buildPond(x, z) {
+            const group = new THREE.Group();
+            const waterMat = new THREE.MeshBasicMaterial({ color: 0x1e90ff, transparent: true, opacity: 0.6 });
+            const lilyMat = new THREE.MeshLambertMaterial({ color: 0x228b22 });
+            const flowerMat = new THREE.MeshLambertMaterial({ color: 0xff69b4 });
+
+            // Вода
+            const water = new THREE.Mesh(new THREE.CircleGeometry(6, 24), waterMat);
+            water.rotation.x = -Math.PI / 2;
+            water.position.y = 0.05;
+            group.add(water);
+
+            // Кувшинки
+            for (let i = 0; i < 8; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const r = 2 + Math.random() * 3;
+                const lily = new THREE.Mesh(new THREE.CircleGeometry(0.5, 8), lilyMat);
+                lily.rotation.x = -Math.PI / 2;
+                lily.position.set(Math.cos(angle) * r, 0.1, Math.sin(angle) * r);
+                group.add(lily);
+
+                // Цветок
+                if (Math.random() > 0.5) {
+                    const flower = new THREE.Mesh(new THREE.SphereGeometry(0.2, 8, 8), flowerMat);
+                    flower.position.set(Math.cos(angle) * r, 0.3, Math.sin(angle) * r);
+                    group.add(flower);
+                }
+            }
+
+            // Камыши по краям
+            for (let i = 0; i < 12; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const r = 5.5 + Math.random() * 1;
+                const reed = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 2, 6), new THREE.MeshLambertMaterial({ color: 0x228b22 }));
+                reed.position.set(Math.cos(angle) * r, 1, Math.sin(angle) * r);
+                group.add(reed);
+            }
+
+            group.position.set(x, 0, z);
+            scene.add(group);
+        }
+
+        function buildRock(x, z) {
+            const rock = new THREE.Mesh(
+                new THREE.DodecahedronGeometry(0.5 + Math.random() * 1, 0),
+                new THREE.MeshLambertMaterial({ color: 0x666666 + Math.floor(Math.random() * 0x222222) })
+            );
+            rock.position.set(x, 0.3, z);
+            rock.rotation.set(Math.random(), Math.random(), Math.random());
+            rock.castShadow = true;
+            scene.add(rock);
+        }
+
+        // ---------- ДОМ ----------
+        function buildHouse() {
+            const wallMat = new THREE.MeshLambertMaterial({ color: 0xd2b48c });
+            const floorMat = new THREE.MeshLambertMaterial({ color: 0x8b7355 });
+            const ceilingMat = new THREE.MeshLambertMaterial({ color: 0xf5deb3 });
+
+            // Пол с узором
+            for (let x = -14; x <= 14; x += 2) {
+                for (let z = -14; z <= 14; z += 2) {
+                    const tile = new THREE.Mesh(
+                        new THREE.BoxGeometry(2, 0.2, 2),
+                        new THREE.MeshLambertMaterial({ color: (x + z) % 4 === 0 ? 0x8b7355 : 0xa0826d })
+                    );
+                    tile.position.set(x, 0.1, z);
+                    tile.receiveShadow = true;
+                    scene.add(tile);
+                }
+            }
+
+            // Стены
+            const walls = [
+                { pos: [0, 6, -15], size: [30, 12, 1] },
+                { pos: [0, 6, 15], size: [30, 12, 1] },
+                { pos: [-15, 6, 0], size: [1, 12, 30] },
+                { pos: [15, 6, 0], size: [1, 12, 30] }
+            ];
+            walls.forEach(w => {
+                const wall = new THREE.Mesh(new THREE.BoxGeometry(...w.size), wallMat);
+                wall.position.set(...w.pos);
+                wall.castShadow = true;
+                wall.receiveShadow = true;
+                scene.add(wall);
             });
 
-            const roof = new THREE.Mesh(
-                new THREE.ConeGeometry(4.5, 3, 4),
-                new THREE.MeshLambertMaterial({ color: 0x654321 })
-            );
-            roof.position.set(x, 7.5, z);
-            roof.rotation.y = Math.PI / 4;
-            scene.add(roof);
+            // Потолок
+            const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(29, 29), ceilingMat);
+            ceiling.rotation.x = Math.PI / 2;
+            ceiling.position.y = 12;
+            scene.add(ceiling);
 
-            const floor = new THREE.Mesh(
-                new THREE.BoxGeometry(7, 0.3, 7),
-                new THREE.MeshLambertMaterial({ color: 0xd2b48c })
-            );
-            floor.position.set(x, 0.15, z);
-            scene.add(floor);
+            // Люстра
+            const chandelier = new THREE.Group();
+            const chandBase = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.5, 12), new THREE.MeshLambertMaterial({ color: 0x333333 }));
+            chandelier.add(chandBase);
+            for (let i = 0; i < 6; i++) {
+                const angle = (i / 6) * Math.PI * 2;
+                const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 1.5, 6), new THREE.MeshLambertMaterial({ color: 0x333333 }));
+                arm.position.set(Math.cos(angle) * 1, 0, Math.sin(angle) * 1);
+                arm.rotation.z = Math.PI / 2;
+                arm.rotation.y = angle;
+                chandelier.add(arm);
+
+                const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.2, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffffaa }));
+                bulb.position.set(Math.cos(angle) * 1.5, -0.3, Math.sin(angle) * 1.5);
+                chandelier.add(bulb);
+            }
+            chandelier.position.set(0, 11, 0);
+            scene.add(chandelier);
+            const chandLight = new THREE.PointLight(0xffaa00, 1.5, 20);
+            chandLight.position.set(0, 10.5, 0);
+            scene.add(chandLight);
+
+            // Компьютерный стол
+            const desk = new THREE.Mesh(new THREE.BoxGeometry(6, 0.3, 3), new THREE.MeshLambertMaterial({ color: 0x654321 }));
+            desk.position.set(0, 1.5, -13);
+            desk.castShadow = true;
+            scene.add(desk);
+
+            // Ножки стола
+            for (let x of [-2.8, 2.8]) {
+                for (let z of [-1.3, 1.3]) {
+                    const leg = new THREE.Mesh(new THREE.BoxGeometry(0.2, 1.5, 0.2), new THREE.MeshLambertMaterial({ color: 0x654321 }));
+                    leg.position.set(x, 0.75, -13 + z);
+                    scene.add(leg);
+                }
+            }
+
+            // Монитор
+            const monitorStand = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.5, 0.5), new THREE.MeshLambertMaterial({ color: 0x333333 }));
+            monitorStand.position.set(0, 1.9, -13);
+            scene.add(monitorStand);
+
+            const monitor = new THREE.Mesh(new THREE.BoxGeometry(4, 2.5, 0.3), new THREE.MeshLambertMaterial({ color: 0x111111 }));
+            monitor.position.set(0, 3.5, -13);
+            scene.add(monitor);
+
+            const screen = new THREE.Mesh(new THREE.BoxGeometry(3.6, 2.1, 0.1), new THREE.MeshBasicMaterial({ color: 0x00ff00 }));
+            screen.position.set(0, 3.5, -12.8);
+            scene.add(screen);
+
+            const screenGlow = new THREE.PointLight(0x00ff00, 2, 8);
+            screenGlow.position.set(0, 3.5, -12);
+            scene.add(screenGlow);
+
+            // Клавиатура
+            const keyboard = new THREE.Mesh(new THREE.BoxGeometry(2, 0.1, 0.8), new THREE.MeshLambertMaterial({ color: 0x222222 }));
+            keyboard.position.set(0, 1.7, -12);
+            scene.add(keyboard);
+
+            // Мышь
+            const mouse = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.1, 0.6), new THREE.MeshLambertMaterial({ color: 0x222222 }));
+            mouse.position.set(2.5, 1.7, -12);
+            scene.add(mouse);
+
+            // Стул
+            const chairSeat = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.2, 1.5), new THREE.MeshLambertMaterial({ color: 0x333333 }));
+            chairSeat.position.set(0, 1, -10);
+            scene.add(chairSeat);
+            const chairBack = new THREE.Mesh(new THREE.BoxGeometry(1.5, 2, 0.2), new THREE.MeshLambertMaterial({ color: 0x333333 }));
+            chairBack.position.set(0, 2, -10.7);
+            scene.add(chairBack);
+            const chairLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 1, 8), new THREE.MeshLambertMaterial({ color: 0x222222 }));
+            chairLeg.position.set(0, 0.5, -10);
+            scene.add(chairLeg);
+
+            // Книжные полки
+            for (let i = 0; i < 4; i++) {
+                const shelf = new THREE.Mesh(new THREE.BoxGeometry(5, 0.2, 1), new THREE.MeshLambertMaterial({ color: 0x654321 }));
+                shelf.position.set(-12, 2 + i * 2, -12 + i * 2);
+                shelf.castShadow = true;
+                scene.add(shelf);
+
+                // Книги
+                for (let j = 0; j < 8; j++) {
+                    const book = new THREE.Mesh(
+                        new THREE.BoxGeometry(0.3, 1.5 + Math.random() * 0.3, 0.8),
+                        new THREE.MeshLambertMaterial({ 
+                            color: [0xff0000, 0x0000ff, 0x00ff00, 0xffff00, 0xff00ff, 0x00ffff][Math.floor(Math.random() * 6)]
+                        })
+                    );
+                    book.position.set(-13.5 + j * 0.5, 2.8 + i * 2, -12 + i * 2);
+                    scene.add(book);
+                }
+            }
+
+            // Диван
+            const sofa = new THREE.Mesh(new THREE.BoxGeometry(5, 1, 2), new THREE.MeshLambertMaterial({ color: 0x8b0000 }));
+            sofa.position.set(8, 0.5, 5);
+            sofa.castShadow = true;
+            scene.add(sofa);
+            const sofaBack = new THREE.Mesh(new THREE.BoxGeometry(5, 1.5, 0.5), new THREE.MeshLambertMaterial({ color: 0x8b0000 }));
+            sofaBack.position.set(8, 1.25, 4);
+            scene.add(sofaBack);
+            for (let x of [6, 10]) {
+                const arm = new THREE.Mesh(new THREE.BoxGeometry(0.5, 1.5, 2), new THREE.MeshLambertMaterial({ color: 0x8b0000 }));
+                arm.position.set(x, 1, 5);
+                scene.add(arm);
+            }
+
+            // Журнальный столик
+            const coffeeTable = new THREE.Mesh(new THREE.BoxGeometry(3, 0.2, 2), new THREE.MeshLambertMaterial({ color: 0x654321 }));
+            coffeeTable.position.set(8, 0.6, 8);
+            scene.add(coffeeTable);
+            for (let x of [6.7, 9.3]) {
+                for (let z of [7, 9]) {
+                    const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.6, 8), new THREE.MeshLambertMaterial({ color: 0x654321 }));
+                    leg.position.set(x, 0.3, z);
+                    scene.add(leg);
+                }
+            }
+
+            // Картина на стене
+            const painting = new THREE.Mesh(new THREE.BoxGeometry(4, 3, 0.2), new THREE.MeshLambertMaterial({ color: 0x4169e1 }));
+            painting.position.set(0, 7, 14.9);
+            scene.add(painting);
+            const frame = new THREE.Mesh(new THREE.BoxGeometry(4.4, 3.4, 0.1), new THREE.MeshLambertMaterial({ color: 0x8b4513 }));
+            frame.position.set(0, 7, 14.85);
+            scene.add(frame);
+
+            // Ковер
+            const carpet = new THREE.Mesh(new THREE.CircleGeometry(4, 24), new THREE.MeshLambertMaterial({ color: 0x8b0000 }));
+            carpet.rotation.x = -Math.PI / 2;
+            carpet.position.set(8, 0.15, 6);
+            scene.add(carpet);
         }
 
+        // ---------- МАТРИЦА ----------
+        function buildMatrix() {
+            // Пол из сетки
+            const gridHelper = new THREE.GridHelper(200, 50, 0x00ff00, 0x003300);
+            scene.add(gridHelper);
+
+            // Падающий код (цифры и катакана)
+            const matrixChars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノ';
+            for (let i = 0; i < 100; i++) {
+                const x = (Math.random() - 0.5) * 180;
+                const z = (Math.random() - 0.5) * 180;
+                const drop = new THREE.Group();
+                
+                for (let j = 0; j < 15; j++) {
+                    const char = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+                    // Используем спрайт с текстом через canvas
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 64;
+                    canvas.height = 64;
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = '#00ff00';
+                    ctx.font = 'bold 48px monospace';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(char, 32, 48);
+                    const texture = new THREE.CanvasTexture(canvas);
+                    const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, opacity: 0.3 + Math.random() * 0.5 }));
+                    sprite.position.y = -j * 1.5;
+                    sprite.scale.set(1, 1, 1);
+                    drop.add(sprite);
+                }
+                
+                drop.position.set(x, 30, z);
+                drop.userData = { speed: 0.1 + Math.random() * 0.2 };
+                scene.add(drop);
+                matrixRainDrops.push(drop);
+            }
+
+            // Светящиеся столбы
+            for (let i = 0; i < 40; i++) {
+                const pillar = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.3, 0.3, 40, 8),
+                    new THREE.MeshBasicMaterial({ 
+                        color: 0x00ff00, 
+                        transparent: true, 
+                        opacity: 0.2 + Math.random() * 0.3 
+                    })
+                );
+                pillar.position.set(
+                    (Math.random() - 0.5) * 160,
+                    20,
+                    (Math.random() - 0.5) * 160
+                );
+                scene.add(pillar);
+            }
+
+            // Платформы
+            for (let i = 0; i < 15; i++) {
+                const platform = new THREE.Mesh(
+                    new THREE.BoxGeometry(6, 0.5, 6),
+                    new THREE.MeshLambertMaterial({ color: 0x003300 })
+                );
+                platform.position.set(
+                    (Math.random() - 0.5) * 120,
+                    Math.random() * 15,
+                    (Math.random() - 0.5) * 120
+                );
+                platform.castShadow = true;
+                platform.receiveShadow = true;
+                scene.add(platform);
+            }
+
+            // Частицы
+            for (let i = 0; i < 300; i++) {
+                const p = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.1, 6, 6),
+                    new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+                );
+                p.position.set(
+                    (Math.random() - 0.5) * 180,
+                    Math.random() * 30,
+                    (Math.random() - 0.5) * 180
+                );
+                p.userData = {
+                    velocity: new THREE.Vector3(
+                        (Math.random() - 0.5) * 0.02,
+                        (Math.random() - 0.5) * 0.02,
+                        (Math.random() - 0.5) * 0.02
+                    )
+                };
+                scene.add(p);
+                particles.push(p);
+            }
+        }
+
+        // ---------- ТЬМА ----------
+        function buildDarkness() {
+            // Туман потемнее
+            scene.fog = new THREE.Fog(0x0a0014, 20, 80);
+
+            // Тёмные столбы-руины
+            for (let i = 0; i < 50; i++) {
+                const height = 10 + Math.random() * 20;
+                const pillar = new THREE.Mesh(
+                    new THREE.CylinderGeometry(1.5 + Math.random(), 2 + Math.random(), height, 8),
+                    new THREE.MeshLambertMaterial({ color: 0x1a0033 })
+                );
+                pillar.position.set(
+                    (Math.random() - 0.5) * 160,
+                    height / 2,
+                    (Math.random() - 0.5) * 160
+                );
+                pillar.castShadow = true;
+                scene.add(pillar);
+
+                // Трещины
+                if (Math.random() > 0.5) {
+                    const crack = new THREE.Mesh(
+                        new THREE.BoxGeometry(0.2, height * 0.7, 0.2),
+                        new THREE.MeshBasicMaterial({ color: 0x000000 })
+                    );
+                    crack.position.copy(pillar.position);
+                    crack.position.x += 1.5;
+                    scene.add(crack);
+                }
+            }
+
+            // Руины зданий
+            for (let i = 0; i < 12; i++) {
+                const ruin = new THREE.Group();
+                const baseSize = 4 + Math.random() * 6;
+                const baseHeight = 3 + Math.random() * 8;
+                
+                const base = new THREE.Mesh(
+                    new THREE.BoxGeometry(baseSize, baseHeight, baseSize),
+                    new THREE.MeshLambertMaterial({ color: 0x2a0043 })
+                );
+                base.position.y = baseHeight / 2;
+                base.castShadow = true;
+                ruin.add(base);
+
+                // Обломки
+                for (let j = 0; j < 5; j++) {
+                    const debris = new THREE.Mesh(
+                        new THREE.BoxGeometry(
+                            1 + Math.random() * 2,
+                            1 + Math.random() * 2,
+                            1 + Math.random() * 2
+                        ),
+                        new THREE.MeshLambertMaterial({ color: 0x2a0043 })
+                    );
+                    debris.position.set(
+                        (Math.random() - 0.5) * baseSize,
+                        baseHeight + Math.random() * 2,
+                        (Math.random() - 0.5) * baseSize
+                    );
+                    debris.rotation.set(Math.random(), Math.random(), Math.random());
+                    ruin.add(debris);
+                }
+
+                ruin.position.set(
+                    (Math.random() - 0.5) * 140,
+                    0,
+                    (Math.random() - 0.5) * 140
+                );
+                ruin.rotation.y = Math.random() * Math.PI;
+                scene.add(ruin);
+            }
+
+            // Светящиеся руны на земле
+            for (let i = 0; i < 20; i++) {
+                const canvas = document.createElement('canvas');
+                canvas.width = 128;
+                canvas.height = 128;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#9400d3';
+                ctx.font = 'bold 100px serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(['','ᚢ','ᚦ','','ᚱ','ᚲ','ᚷ','ᚹ','','ᚾ','ᛁ','','ᛇ','ᛈ','','ᛊ','ᛏ','','ᛖ','ᛗ','','ᛜ','ᛞ',''][Math.floor(Math.random() * 24)], 64, 100);
+                const texture = new THREE.CanvasTexture(canvas);
+                const rune = new THREE.Mesh(
+                    new THREE.PlaneGeometry(3, 3),
+                    new THREE.MeshBasicMaterial({ map: texture, transparent: true, opacity: 0.8 })
+                );
+                rune.rotation.x = -Math.PI / 2;
+                rune.position.set(
+                    (Math.random() - 0.5) * 120,
+                    0.1,
+                    (Math.random() - 0.5) * 120
+                );
+                scene.add(rune);
+                const runeLight = new THREE.PointLight(0x9400d3, 0.5, 5);
+                runeLight.position.copy(rune.position);
+                runeLight.position.y = 1;
+                scene.add(runeLight);
+            }
+
+            // Черепа
+            for (let i = 0; i < 15; i++) {
+                const skull = new THREE.Group();
+                const head = new THREE.Mesh(new THREE.SphereGeometry(0.4, 8, 8), new THREE.MeshLambertMaterial({ color: 0xdddddd }));
+                skull.add(head);
+                const jaw = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.2, 0.3), new THREE.MeshLambertMaterial({ color: 0xdddddd }));
+                jaw.position.set(0, -0.3, 0.2);
+                skull.add(jaw);
+                // Глазницы
+                for (let x of [-0.15, 0.15]) {
+                    const eye = new THREE.Mesh(new THREE.SphereGeometry(0.1, 6, 6), new THREE.MeshBasicMaterial({ color: 0x000000 }));
+                    eye.position.set(x, 0.05, 0.3);
+                    skull.add(eye);
+                }
+                skull.position.set(
+                    (Math.random() - 0.5) * 100,
+                    0.4,
+                    (Math.random() - 0.5) * 100
+                );
+                skull.rotation.y = Math.random() * Math.PI * 2;
+                scene.add(skull);
+            }
+
+            // Фиолетовые частицы
+            for (let i = 0; i < 200; i++) {
+                const p = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.15, 6, 6),
+                    new THREE.MeshBasicMaterial({ color: 0x9400d3, transparent: true, opacity: 0.7 })
+                );
+                p.position.set(
+                    (Math.random() - 0.5) * 160,
+                    Math.random() * 25,
+                    (Math.random() - 0.5) * 160
+                );
+                p.userData = {
+                    baseY: p.position.y,
+                    phase: Math.random() * Math.PI * 2
+                };
+                scene.add(p);
+                particles.push(p);
+            }
+
+            // Летучие мыши
+            for (let i = 0; i < 10; i++) {
+                const bat = new THREE.Group();
+                const body = new THREE.Mesh(new THREE.SphereGeometry(0.3, 8, 8), new THREE.MeshLambertMaterial({ color: 0x222222 }));
+                bat.add(body);
+                for (let side of [-1, 1]) {
+                    const wing = new THREE.Mesh(new THREE.PlaneGeometry(1, 0.6), new THREE.MeshLambertMaterial({ color: 0x222222, side: THREE.DoubleSide }));
+                    wing.position.x = side * 0.6;
+                    bat.add(wing);
+                }
+                bat.position.set(
+                    (Math.random() - 0.5) * 100,
+                    10 + Math.random() * 10,
+                    (Math.random() - 0.5) * 100
+                );
+                bat.userData = {
+                    basePos: bat.position.clone(),
+                    phase: Math.random() * Math.PI * 2
+                };
+                scene.add(bat);
+                animatedObjects.push({ type: 'bat', obj: bat });
+            }
+        }
+        // ---------- САД ----------
+        function buildGarden() {
+            // Трава (разные оттенки)
+            for (let x = -80; x <= 80; x += 4) {
+                for (let z = -80; z <= 80; z += 4) {
+                    const grass = new THREE.Mesh(
+                        new THREE.PlaneGeometry(4, 4),
+                        new THREE.MeshLambertMaterial({ 
+                            color: new THREE.Color().setHSL(0.3, 0.7, 0.3 + Math.random() * 0.15)
+                        })
+                    );
+                    grass.rotation.x = -Math.PI / 2;
+                    grass.position.set(x, 0.01, z);
+                    grass.receiveShadow = true;
+                    scene.add(grass);
+                }
+            }
+
+            // 25 детализированных деревьев
+            for (let i = 0; i < 25; i++) {
+                const x = (Math.random() - 0.5) * 140;
+                const z = (Math.random() - 0.5) * 140;
+                if (Math.abs(x - 18) < 5 && Math.abs(z + 15) < 5) continue; // Не ставим на большое дерево
+                buildDetailedTree(x, z);
+            }
+
+            // Большое дерево для LEGENDARCHYK и потужность
+            buildGiantTree(18, -15);
+
+            // Грядки с помидорами
+            for (let row = 0; row < 5; row++) {
+                for (let col = 0; col < 6; col++) {
+                    const bed = new THREE.Mesh(
+                        new THREE.BoxGeometry(3, 0.3, 2),
+                        new THREE.MeshLambertMaterial({ color: 0x4a2511 })
+                    );
+                    bed.position.set(-20 + col * 4, 0.15, -20 + row * 4);
+                    scene.add(bed);
+
+                    // Растения
+                    for (let p = 0; p < 4; p++) {
+                        const plant = new THREE.Mesh(
+                            new THREE.CylinderGeometry(0.1, 0.1, 1, 6),
+                            new THREE.MeshLambertMaterial({ color: 0x228b22 })
+                        );
+                        plant.position.set(-20 + col * 4 - 1 + p * 0.7, 0.8, -20 + row * 4);
+                        scene.add(plant);
+
+                        // Помидоры
+                        if (Math.random() > 0.3) {
+                            const tomato = new THREE.Mesh(
+                                new THREE.SphereGeometry(0.25, 8, 8),
+                                new THREE.MeshLambertMaterial({ color: 0xff0000 })
+                            );
+                            tomato.position.set(-20 + col * 4 - 1 + p * 0.7, 1.3, -20 + row * 4);
+                            scene.add(tomato);
+                        }
+                    }
+                }
+            }
+
+            // Забор
+            buildFence(-70, 70, -70, 70);
+
+            // Скамейки
+            for (let i = 0; i < 6; i++) {
+                buildBench((Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100);
+            }
+
+            // Фонтан
+            buildFountain(0, 0);
+
+            // Пруд
+            buildPond(-30, 25);
+
+            // Теплица
+            buildGreenhouse(30, 25);
+
+            // Цветы
+            for (let i = 0; i < 100; i++) {
+                const flower = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.2, 6, 6),
+                    new THREE.MeshLambertMaterial({ 
+                        color: [0xff0000, 0xffff00, 0xff69b4, 0x9400d3, 0xff8c00][Math.floor(Math.random() * 5)]
+                    })
+                );
+                flower.position.set(
+                    (Math.random() - 0.5) * 140,
+                    0.3,
+                    (Math.random() - 0.5) * 140
+                );
+                scene.add(flower);
+
+                const stem = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.03, 0.03, 0.5, 4),
+                    new THREE.MeshLambertMaterial({ color: 0x228b22 })
+                );
+                stem.position.copy(flower.position);
+                stem.position.y = 0.1;
+                scene.add(stem);
+            }
+
+            // Бабочки
+            for (let i = 0; i < 15; i++) {
+                const butterfly = new THREE.Group();
+                const body = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.5, 6), new THREE.MeshLambertMaterial({ color: 0x000000 }));
+                butterfly.add(body);
+                for (let side of [-1, 1]) {
+                    const wing = new THREE.Mesh(
+                        new THREE.PlaneGeometry(0.4, 0.3),
+                        new THREE.MeshBasicMaterial({ 
+                            color: [0xff69b4, 0xffd700, 0x00bfff, 0xff4500][Math.floor(Math.random() * 4)],
+                            side: THREE.DoubleSide
+                        })
+                    );
+                    wing.position.x = side * 0.25;
+                    wing.rotation.y = side * 0.3;
+                    butterfly.add(wing);
+                }
+                butterfly.position.set(
+                    (Math.random() - 0.5) * 80,
+                    2 + Math.random() * 3,
+                    (Math.random() - 0.5) * 80
+                );
+                butterfly.userData = {
+                    basePos: butterfly.position.clone(),
+                    phase: Math.random() * Math.PI * 2
+                };
+                scene.add(butterfly);
+                animatedObjects.push({ type: 'butterfly', obj: butterfly });
+            }
+
+            // Пчёлы
+            for (let i = 0; i < 10; i++) {
+                const bee = new THREE.Group();
+                const beeBody = new THREE.Mesh(new THREE.SphereGeometry(0.15, 8, 8), new THREE.MeshLambertMaterial({ color: 0xffd700 }));
+                bee.add(beeBody);
+                const stripe = new THREE.Mesh(new THREE.TorusGeometry(0.15, 0.05, 4, 8), new THREE.MeshLambertMaterial({ color: 0x000000 }));
+                stripe.rotation.x = Math.PI / 2;
+                bee.add(stripe);
+                for (let side of [-1, 1]) {
+                    const wing = new THREE.Mesh(
+                        new THREE.PlaneGeometry(0.2, 0.15),
+                        new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.7, side: THREE.DoubleSide })
+                    );
+                    wing.position.set(side * 0.1, 0.15, 0);
+                    bee.add(wing);
+                }
+                bee.position.set(
+                    (Math.random() - 0.5) * 60,
+                    1 + Math.random() * 2,
+                    (Math.random() - 0.5) * 60
+                );
+                bee.userData = {
+                    basePos: bee.position.clone(),
+                    phase: Math.random() * Math.PI * 2
+                };
+                scene.add(bee);
+                animatedObjects.push({ type: 'bee', obj: bee });
+            }
+        }
+
+        function buildDetailedTree(x, z) {
+            const group = new THREE.Group();
+            const trunkMat = new THREE.MeshLambertMaterial({ color: 0x4a2511 });
+            const leafMat = new THREE.MeshLambertMaterial({ color: 0x228b22 });
+
+            // Ствол
+            const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.8, 5, 10), trunkMat);
+            trunk.position.y = 2.5;
+            trunk.castShadow = true;
+            group.add(trunk);
+
+            // Ветви
+            for (let i = 0; i < 4; i++) {
+                const branch = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.25, 2, 6), trunkMat);
+                branch.position.y = 3 + i * 0.5;
+                branch.rotation.z = (Math.random() - 0.5) * 1.5;
+                branch.rotation.x = (Math.random() - 0.5) * 1.5;
+                group.add(branch);
+            }
+
+            // Крона
+            const leafPositions = [
+                [0, 6, 0, 3],
+                [-1.5, 5.5, 1, 2],
+                [1.5, 5.5, -1, 2],
+                [0, 7.5, 0, 2]
+            ];
+            leafPositions.forEach(([px, py, pz, r]) => {
+                const leaves = new THREE.Mesh(new THREE.SphereGeometry(r, 12, 12), leafMat);
+                leaves.position.set(px, py, pz);
+                leaves.castShadow = true;
+                group.add(leaves);
+            });
+
+            group.position.set(x, 0, z);
+            scene.add(group);
+        }
+
+        function buildGiantTree(x, z) {
+            const group = new THREE.Group();
+            const trunkMat = new THREE.MeshLambertMaterial({ color: 0x4a2511 });
+            const leafMat = new THREE.MeshLambertMaterial({ color: 0x228b22 });
+
+            // Мощный ствол
+            const trunk = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 2.5, 12, 16), trunkMat);
+            trunk.position.y = 6;
+            trunk.castShadow = true;
+            group.add(trunk);
+
+            // Корни
+            for (let i = 0; i < 8; i++) {
+                const angle = (i / 8) * Math.PI * 2;
+                const root = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.5, 3, 8), trunkMat);
+                root.position.set(Math.cos(angle) * 2, 0.5, Math.sin(angle) * 2);
+                root.rotation.z = Math.cos(angle) * 0.5;
+                root.rotation.x = Math.sin(angle) * 0.5;
+                group.add(root);
+            }
+
+            // Ветви
+            for (let i = 0; i < 8; i++) {
+                const angle = (i / 8) * Math.PI * 2;
+                const branch = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.6, 4, 8), trunkMat);
+                branch.position.set(Math.cos(angle) * 2, 9, Math.sin(angle) * 2);
+                branch.rotation.z = Math.cos(angle) * 1.2;
+                branch.rotation.x = Math.sin(angle) * 1.2;
+                group.add(branch);
+            }
+
+            // Огромная крона
+            const crownPositions = [
+                [0, 14, 0, 5],
+                [-3, 13, 2, 3.5],
+                [3, 13, -2, 3.5],
+                [2, 15, 2, 3],
+                [-2, 15, -2, 3],
+                [0, 16, 0, 2.5]
+            ];
+            crownPositions.forEach(([px, py, pz, r]) => {
+                const leaves = new THREE.Mesh(new THREE.SphereGeometry(r, 16, 16), leafMat);
+                leaves.position.set(px, py, pz);
+                leaves.castShadow = true;
+                group.add(leaves);
+            });
+
+            group.position.set(x, 0, z);
+            scene.add(group);
+        }
+
+        function buildGreenhouse(x, z) {
+            const group = new THREE.Group();
+            const frameMat = new THREE.MeshLambertMaterial({ color: 0x888888 });
+            const glassMat = new THREE.MeshBasicMaterial({ color: 0x87ceeb, transparent: true, opacity: 0.4 });
+
+            // Каркас
+            const frame1 = new THREE.Mesh(new THREE.BoxGeometry(10, 5, 0.2), frameMat);
+            frame1.position.set(0, 2.5, -4);
+            group.add(frame1);
+            const frame2 = frame1.clone();
+            frame2.position.z = 4;
+            group.add(frame2);
+            const frame3 = new THREE.Mesh(new THREE.BoxGeometry(0.2, 5, 8), frameMat);
+            frame3.position.set(-5, 2.5, 0);
+            group.add(frame3);
+            const frame4 = frame3.clone();
+            frame4.position.x = 5;
+            group.add(frame4);
+
+            // Крыша
+            const roof = new THREE.Mesh(new THREE.ConeGeometry(7, 3, 4), glassMat);
+            roof.position.y = 6.5;
+            roof.rotation.y = Math.PI / 4;
+            group.add(roof);
+
+            // Стёкла
+            for (let side of [-1, 1]) {
+                const glass = new THREE.Mesh(new THREE.PlaneGeometry(10, 5), glassMat);
+                glass.position.set(0, 2.5, side * 4);
+                if (side === -1) glass.rotation.y = Math.PI;
+                group.add(glass);
+            }
+            for (let side of [-1, 1]) {
+                const glass = new THREE.Mesh(new THREE.PlaneGeometry(8, 5), glassMat);
+                glass.position.set(side * 5, 2.5, 0);
+                glass.rotation.y = Math.PI / 2;
+                group.add(glass);
+            }
+
+            // Растения внутри
+            for (let i = 0; i < 6; i++) {
+                const plant = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.2, 0.2, 2, 8),
+                    new THREE.MeshLambertMaterial({ color: 0x228b22 })
+                );
+                plant.position.set(-3 + i * 1.2, 1, 0);
+                group.add(plant);
+            }
+
+            group.position.set(x, 0, z);
+            scene.add(group);
+        }
+
+        // ---------- МАЙНКРАФТ ----------
+        function buildMinecraft() {
+            // Блоки земли с травой сверху
+            for (let x = -40; x <= 40; x += 2) {
+                for (let z = -40; z <= 40; z += 2) {
+                    const block = new THREE.Mesh(
+                        new THREE.BoxGeometry(2, 2, 2),
+                        new THREE.MeshLambertMaterial({ color: 0x8b4513 })
+                    );
+                    block.position.set(x, 1, z);
+                    block.castShadow = true;
+                    block.receiveShadow = true;
+                    scene.add(block);
+
+                    // Трава сверху
+                    const grass = new THREE.Mesh(
+                        new THREE.BoxGeometry(2, 0.3, 2),
+                        new THREE.MeshLambertMaterial({ color: 0x228b22 })
+                    );
+                    grass.position.set(x, 2.15, z);
+                    scene.add(grass);
+                }
+            }
+
+            // Деревья (как в Minecraft)
+            const treePositions = [[0, 0], [-15, 10], [20, -15], [-25, -20], [30, 25], [-10, 30]];
+            treePositions.forEach(([tx, tz]) => {
+                buildMinecraftTree(tx, tz);
+            });
+
+            // Облака
+            for (let i = 0; i < 20; i++) {
+                const cloud = new THREE.Group();
+                for (let j = 0; j < 5; j++) {
+                    const puff = new THREE.Mesh(
+                        new THREE.BoxGeometry(3, 1, 3),
+                        new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 })
+                    );
+                    puff.position.set(j * 2 - 4, Math.random() * 0.5, Math.random() * 2 - 1);
+                    cloud.add(puff);
+                }
+                cloud.position.set(
+                    (Math.random() - 0.5) * 150,
+                    30 + Math.random() * 10,
+                    (Math.random() - 0.5) * 150
+                );
+                cloud.userData = { speed: 0.01 + Math.random() * 0.02 };
+                scene.add(cloud);
+                animatedObjects.push({ type: 'cloud', obj: cloud });
+            }
+
+            // Солнце
+            const sun = new THREE.Mesh(
+                new THREE.SphereGeometry(5, 16, 16),
+                new THREE.MeshBasicMaterial({ color: 0xffff00 })
+            );
+            sun.position.set(50, 40, -50);
+            scene.add(sun);
+            const sunLight = new THREE.PointLight(0xffff00, 1, 200);
+            sunLight.position.copy(sun.position);
+            scene.add(sunLight);
+
+            // Крипер (декорация)
+            buildCreeper(15, 15);
+
+            // Свинья
+            buildPig(-20, 10);
+
+            // Кирка у дерева Loli
+            const pickaxe = new THREE.Group();
+            const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 2, 6), new THREE.MeshLambertMaterial({ color: 0x654321 }));
+            pickaxe.add(handle);
+            const head = new THREE.Mesh(new THREE.BoxGeometry(1, 0.5, 0.3), new THREE.MeshLambertMaterial({ color: 0x888888 }));
+            head.position.y = 1;
+            pickaxe.add(head);
+            pickaxe.position.set(-8, 3, 10);
+            pickaxe.rotation.z = 0.5;
+            scene.add(pickaxe);
+        }
+
+        function buildMinecraftTree(x, z) {
+            const group = new THREE.Group();
+            const trunkMat = new THREE.MeshLambertMaterial({ color: 0x654321 });
+            const leafMat = new THREE.MeshLambertMaterial({ color: 0x228b22 });
+
+            // Ствол 1x1x5
+            for (let y = 0; y < 5; y++) {
+                const block = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), trunkMat);
+                block.position.set(0, y + 0.5, 0);
+                block.castShadow = true;
+                group.add(block);
+            }
+
+            // Листва 3x3x3 с углами
+            for (let dx = -1; dx <= 1; dx++) {
+                for (let dy = 0; dy < 3; dy++) {
+                    for (let dz = -1; dz <= 1; dz++) {
+                        if (Math.abs(dx) + Math.abs(dz) + dy < 4) {
+                            const block = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), leafMat);
+                            block.position.set(dx, dy + 5, dz);
+                            block.castShadow = true;
+                            group.add(block);
+                        }
+                    }
+                }
+            }
+
+            group.position.set(x, 2, z);
+            scene.add(group);
+        }
+
+        function buildCreeper(x, z) {
+            const group = new THREE.Group();
+            const mat = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
+            const darkMat = new THREE.MeshLambertMaterial({ color: 0x006400 });
+
+            // Тело
+            const body = new THREE.Mesh(new THREE.BoxGeometry(1, 1.5, 0.6), mat);
+            body.position.y = 1.5;
+            group.add(body);
+
+            // Голова
+            const head = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), mat);
+            head.position.y = 2.75;
+            group.add(head);
+
+            // Лицо
+            const face = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.8, 0.1), darkMat);
+            face.position.set(0, 2.75, 0.55);
+            group.add(face);
+
+            // Глаза
+            for (let side of [-0.2, 0.2]) {
+                const eye = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.1), new THREE.MeshBasicMaterial({ color: 0x000000 }));
+                eye.position.set(side, 2.85, 0.6);
+                group.add(eye);
+            }
+
+            // Ноги
+            for (let side of [-0.25, 0.25]) {
+                const leg = new THREE.Mesh(new THREE.BoxGeometry(0.4, 1, 0.4), mat);
+                leg.position.set(side, 0.5, 0);
+                group.add(leg);
+            }
+
+            group.position.set(x, 2, z);
+            scene.add(group);
+        }
+
+        function buildPig(x, z) {
+            const group = new THREE.Group();
+            const mat = new THREE.MeshLambertMaterial({ color: 0xffb6c1 });
+            const darkMat = new THREE.MeshLambertMaterial({ color: 0xff69b4 });
+
+            // Тело
+            const body = new THREE.Mesh(new THREE.BoxGeometry(1.5, 1, 1), mat);
+            body.position.y = 1;
+            group.add(body);
+
+            // Голова
+            const head = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.8, 0.8), mat);
+            head.position.set(0.9, 1.2, 0);
+            group.add(head);
+
+            // Пятачок
+            const snout = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.3, 0.4), darkMat);
+            snout.position.set(1.3, 1.1, 0);
+            group.add(snout);
+
+            // Ноги
+            for (let dx of [-0.5, 0.5]) {
+                for (let dz of [-0.3, 0.3]) {
+                    const leg = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.8, 0.3), mat);
+                    leg.position.set(dx, 0.4, dz);
+                    group.add(leg);
+                }
+            }
+
+            group.position.set(x, 2, z);
+            scene.add(group);
+        }
+
+        // ==================== ОБЪЕКТЫ И ПОРТАЛЫ ====================
         function addObject(char) {
             const texture = textureLoader.load(char.avatar);
             const spriteMat = new THREE.SpriteMaterial({ 
@@ -778,17 +1799,23 @@
                 transparent: true
             });
             const sprite = new THREE.Sprite(spriteMat);
-            sprite.scale.set(2.5, 2.5, 1);
+            sprite.scale.set(3, 3, 1);
             sprite.position.set(char.pos[0], char.pos[1], char.pos[2]);
             scene.add(sprite);
             objects.push({ sprite, char });
+
+            // Свечение вокруг аватарки
+            const glow = new THREE.PointLight(0xff69b4, 1, 5);
+            glow.position.copy(sprite.position);
+            scene.add(glow);
+            animatedObjects.push({ type: 'glow', obj: glow, base: sprite.position.clone() });
         }
 
         function addPortal(pos, type) {
             let geo, mat, glowColor;
             
             if (type === 'house') {
-                geo = new THREE.BoxGeometry(6, 8, 1);
+                geo = new THREE.BoxGeometry(7, 9, 1);
                 mat = new THREE.MeshLambertMaterial({ color: 0x8b4513 });
                 glowColor = 0xffd700;
             } else if (type === 'computer') {
@@ -796,11 +1823,11 @@
                 mat = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
                 glowColor = 0x00ff00;
             } else if (type === 'abyss' || type === 'spikes') {
-                geo = new THREE.CylinderGeometry(5, 5, 1, 16);
+                geo = new THREE.CylinderGeometry(5, 5, 1, 24);
                 mat = new THREE.MeshBasicMaterial({ color: 0x000000 });
                 glowColor = 0x9400d3;
             } else if (type === 'portal') {
-                geo = new THREE.TorusGeometry(5, 1, 16, 32);
+                geo = new THREE.TorusGeometry(5, 1.2, 24, 48);
                 mat = new THREE.MeshBasicMaterial({ color: 0x8b008b });
                 glowColor = 0xff0000;
             }
@@ -809,13 +1836,31 @@
             mesh.position.set(pos[0], pos[1] + 4, pos[2]);
             scene.add(mesh);
 
-            const glow = new THREE.PointLight(glowColor, 2, 12);
+            const glow = new THREE.PointLight(glowColor, 3, 15);
             glow.position.copy(mesh.position);
             scene.add(glow);
+
+            // Частицы портала
+            for (let i = 0; i < 30; i++) {
+                const p = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.2, 6, 6),
+                    new THREE.MeshBasicMaterial({ color: glowColor, transparent: true, opacity: 0.8 })
+                );
+                p.position.copy(mesh.position);
+                p.userData = {
+                    angle: Math.random() * Math.PI * 2,
+                    radius: 5 + Math.random() * 2,
+                    speed: 0.02 + Math.random() * 0.02,
+                    yOffset: (Math.random() - 0.5) * 8
+                };
+                scene.add(p);
+                animatedObjects.push({ type: 'portalParticle', obj: p, center: mesh.position.clone() });
+            }
 
             portal = { mesh, pos, type, glow };
         }
 
+        // ==================== ИГРОВОЙ ЦИКЛ ====================
         function animate() {
             requestAnimationFrame(animate);
 
@@ -823,6 +1868,63 @@
                 updatePlayer();
                 checkInteractions();
             }
+
+            // Анимации
+            const time = Date.now() * 0.001;
+            
+            animatedObjects.forEach(a => {
+                if (a.type === 'firefly') {
+                    a.obj.position.y = a.obj.userData.baseY + Math.sin(time * 2 + a.obj.userData.phase) * 0.5;
+                    a.obj.position.x += Math.sin(time + a.obj.userData.phase) * 0.01;
+                } else if (a.type === 'smoke') {
+                    a.obj.position.y = a.obj.userData.baseY + Math.sin(time * 0.5 + a.obj.userData.phase) * 0.3;
+                    a.obj.material.opacity = 0.3 + Math.sin(time + a.obj.userData.phase) * 0.2;
+                } else if (a.type === 'waterdrop') {
+                    a.obj.position.y = a.obj.userData.baseY + Math.abs(Math.sin(time * 3 + a.obj.userData.phase)) * 1;
+                } else if (a.type === 'swing') {
+                    a.obj.rotation.z = Math.sin(time * 1.5 + a.obj.phase) * 0.15;
+                } else if (a.type === 'bat') {
+                    a.obj.position.x = a.obj.userData.basePos.x + Math.sin(time + a.obj.userData.phase) * 5;
+                    a.obj.position.z = a.obj.userData.basePos.z + Math.cos(time * 0.7 + a.obj.userData.phase) * 5;
+                    a.obj.position.y = a.obj.userData.basePos.y + Math.sin(time * 2 + a.obj.userData.phase) * 1;
+                } else if (a.type === 'butterfly') {
+                    a.obj.position.x = a.obj.userData.basePos.x + Math.sin(time * 0.5 + a.obj.userData.phase) * 8;
+                    a.obj.position.z = a.obj.userData.basePos.z + Math.cos(time * 0.3 + a.obj.userData.phase) * 8;
+                    a.obj.position.y = a.obj.userData.basePos.y + Math.sin(time * 2 + a.obj.userData.phase) * 0.5;
+                    a.obj.children.forEach((c, i) => {
+                        if (i > 0) c.rotation.y = Math.sin(time * 10 + a.obj.userData.phase) * 0.5;
+                    });
+                } else if (a.type === 'bee') {
+                    a.obj.position.x = a.obj.userData.basePos.x + Math.sin(time * 2 + a.obj.userData.phase) * 3;
+                    a.obj.position.z = a.obj.userData.basePos.z + Math.cos(time * 1.5 + a.obj.userData.phase) * 3;
+                } else if (a.type === 'cloud') {
+                    a.obj.position.x += a.obj.userData.speed;
+                    if (a.obj.position.x > 80) a.obj.position.x = -80;
+                } else if (a.type === 'glow') {
+                    a.obj.intensity = 0.8 + Math.sin(time * 3) * 0.3;
+                } else if (a.type === 'portalParticle') {
+                    a.obj.userData.angle += a.obj.userData.speed;
+                    a.obj.position.x = a.center.x + Math.cos(a.obj.userData.angle) * a.obj.userData.radius;
+                    a.obj.position.z = a.center.z + Math.sin(a.obj.userData.angle) * a.obj.userData.radius;
+                    a.obj.position.y = a.center.y + a.obj.userData.yOffset + Math.sin(time * 2 + a.obj.userData.angle) * 0.5;
+                }
+            });
+
+            // Матричный дождь
+            matrixRainDrops.forEach(drop => {
+                drop.position.y -= drop.userData.speed;
+                if (drop.position.y < -20) drop.position.y = 30;
+            });
+
+            // Частицы
+            particles.forEach(p => {
+                if (p.userData.velocity) {
+                    p.position.add(p.userData.velocity);
+                    if (p.position.y < 0) p.position.y = 20;
+                } else if (p.userData.baseY !== undefined) {
+                    p.position.y = p.userData.baseY + Math.sin(time * 2 + p.userData.phase) * 2;
+                }
+            });
 
             camera.position.set(player.x, player.y, player.z);
             camera.rotation.order = 'YXZ';
@@ -837,7 +1939,7 @@
         }
 
         function updatePlayer() {
-            const speed = 0.2;
+            const speed = 0.25;
             const forward = new THREE.Vector3(
                 -Math.sin(player.angle),
                 0,
@@ -866,7 +1968,7 @@
                 player.z += right.z * speed;
             }
 
-            const bound = 55;
+            const bound = 90;
             player.x = Math.max(-bound, Math.min(bound, player.x));
             player.z = Math.max(-bound, Math.min(bound, player.z));
         }
@@ -877,7 +1979,7 @@
                 const dx = portal.pos[0] - player.x;
                 const dz = portal.pos[2] - player.z;
                 const dist = Math.sqrt(dx*dx + dz*dz);
-                if (dist < 10) {
+                if (dist < 12) {
                     hint.classList.add('show');
                 } else {
                     hint.classList.remove('show');
@@ -893,7 +1995,7 @@
             const sprites = objects.map(o => o.sprite);
             const intersects = raycaster.intersectObjects(sprites);
 
-            if (intersects.length > 0 && intersects[0].distance < 6) {
+            if (intersects.length > 0 && intersects[0].distance < 8) {
                 const hitSprite = intersects[0].object;
                 const obj = objects.find(o => o.sprite === hitSprite);
                 if (obj && !collected.includes(obj.char.id)) {
@@ -927,7 +2029,7 @@
             const dz = portal.pos[2] - player.z;
             const dist = Math.sqrt(dx*dx + dz*dz);
 
-            if (dist < 10) {
+            if (dist < 12) {
                 const sceneData = scenes[currentScene];
                 if (sceneData.next) {
                     loadScene(sceneData.next);
