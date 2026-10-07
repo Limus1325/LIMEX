@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIMEX THE HUNT 1 - 3D Adventure</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            user-select: none;
+        }
+
+        /* Главная страница */
+        #homeScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a0033 0%, #000 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        h1 {
+            font-size: 4em;
+            text-transform: uppercase;
+            letter-spacing: 10px;
+            background: linear-gradient(45deg, #ff69b4, #00f3ff, #ff69b4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient 3s ease infinite;
+            background-size: 200% 200%;
+            margin-bottom: 20px;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            color: #ff69b4;
+            margin-bottom: 40px;
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #ff69b4, #00f3ff);
+            color: #000;
+            border: none;
+            padding: 20px 60px;
+            font-size: 1.5em;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+        }
+
+        .start-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 105, 180, 0.5);
+        }
+
+        /* Игровой экран */
+        #gameScreen {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            perspective: 1000px;
+            overflow: hidden;
+        }
+
+        .scene {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: all 1s ease;
+        }
+
+        .scene.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* UI элементы */
+        .hud {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border: 2px solid #ff69b4;
+            border-radius: 10px;
+        }
+
+        .hud-info {
+            font-size: 1.2em;
+        }
+
+        .hud-info span {
+            color: #ff69b4;
+            font-weight: bold;
+        }
+
+        .timer {
+            font-size: 1.5em;
+            color: #00f3ff;
+            font-weight: bold;
+        }
+
+        .location-name {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2em;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255, 105, 180, 0.8);
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 30px;
+            border-radius: 10px;
+            border: 2px solid #ff69b4;
+        }
+
+        /* Сцена: Сакура */
+        #scene-sakura {
+            background: linear-gradient(180deg, #ffb7c5 0%, #ff69b4 50%, #ff1493 100%);
+        }
+
+        .sakura-tree {
+            position: absolute;
+            font-size: 8em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .sakura-tree:hover {
+            transform: scale(1.1);
+        }
+
+        .house {
+            position: absolute;
+            width: 300px;
+            height: 250px;
+            background: linear-gradient(180deg, #8b4513 0%, #654321 100%);
+            border: 4px solid #4a2511;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+        }
+
+        .house:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(139, 69, 19, 0.8);
+        }
+
+        .house::before {
+            content: '🏠';
+            position: absolute;
+            top: -60px;
+            font-size: 1.5em;
+        }
+
+        .swing {
+            position: absolute;
+            width: 100px;
+            height: 150px;
+            cursor: pointer;
+        }
+
+        .swing::before {
+            content: '🎪';
+            font-size: 4em;
+            position: absolute;
+            top: -20px;
+        }
+
+        .swing-seat {
+            position: absolute;
+            bottom: 0;
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.3);
+            border: 3px solid #fff;
+            border-radius: 50%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .garden-entrance {
+            position: absolute;
+            width: 150px;
+            height: 200px;
+            background: linear-gradient(180deg, #90ee90 0%, #228b22 100%);
+            border: 4px solid #006400;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4em;
+            transition: all 0.3s;
+        }
+
+        .garden-entrance:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+        }
+
+        /* Сцена: Дом */
+        #scene-house {
+            background: linear-gradient(180deg, #d2b48c 0%, #8b7355 100%);
+        }
+
+        .computer {
+            position: absolute;
+            width: 200px;
+            height: 180px;
+            background: #333;
+            border: 4px solid #666;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5em;
+            transition: all 0.3s;
+        }
+
+        .computer:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+        }
+
+        .computer-screen {
+            position: absolute;
+            top: 20px;
+            width: 160px;
+            height: 100px;
+            background: #000;
+            border: 2px solid #00ff00;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.3em;
+            color: #00ff00;
+        }
+
+        .exit-house {
+            position: absolute;
+            bottom: 50px;
+            right: 50px;
+            width: 100px;
+            height: 150px;
+            background: #8b4513;
+            border: 3px solid #4a2511;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            transition: all 0.3s;
+        }
+
+        .exit-house:hover {
+            transform: scale(1.1);
+        }
+
+        /* Сцена: Матрица */
+        #scene-matrix {
+            background: #000;
+            overflow: hidden;
+        }
+
+        .matrix-code {
+            position: absolute;
+            color: #00ff00;
+            font-size: 14px;
+            font-family: monospace;
+            animation: matrix-fall 3s linear infinite;
+        }
+
+        @keyframes matrix-fall {
+            0% { transform: translateY(-100px); opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+
+        .abyss {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(180deg, transparent 0%, #000 100%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            transition: all 0.3s;
+        }
+
+        .abyss:hover {
+            background: linear-gradient(180deg, transparent 0%, #1a0033 100%);
+        }
+
+        /* Сцена: Тьма */
+        #scene-darkness {
+            background: radial-gradient(ellipse at center, #1a0033 0%, #000 100%);
+        }
+
+        .dark-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #4b0082;
+            border-radius: 50%;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); opacity: 0.3; }
+            50% { transform: translateY(-20px); opacity: 1; }
+        }
+
+        .spike-pit {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 150px;
+            background: linear-gradient(180deg, #333 0%, #000 100%);
+            border: 4px solid #666;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4em;
+            transition: all 0.3s;
+        }
+
+        .spike-pit:hover {
+            transform: translateX(-50%) scale(1.1);
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+        }
+
+        /* Сцена: Сад */
+        #scene-garden {
+            background: linear-gradient(180deg, #87ceeb 0%, #90ee90 50%, #228b22 100%);
+        }
+
+        .garden-tree {
+            position: absolute;
+            font-size: 6em;
+        }
+
+        .tomato-plant {
+            position: absolute;
+            font-size: 3em;
+        }
+
+        .minecraft-portal {
+            position: absolute;
+            width: 200px;
+            height: 250px;
+            background: linear-gradient(180deg, #4b0082 0%, #8b008b 50%, #ff0000 100%);
+            border: 8px solid #333;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5em;
+            animation: portal-pulse 2s ease-in-out infinite;
+            transition: all 0.3s;
+        }
+
+        @keyframes portal-pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 0, 0, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(255, 0, 0, 0.8); }
+        }
+
+        .minecraft-portal:hover {
+            transform: scale(1.1);
+        }
+
+        /* Сцена: Майнкрафт */
+        #scene-minecraft {
+            background: linear-gradient(180deg, #87ceeb 0%, #8b7355 60%, #654321 100%);
+            image-rendering: pixelated;
+        }
+
+        .mc-block {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: #8b4513;
+            border: 3px solid #654321;
+        }
+
+        .mc-tree {
+            position: absolute;
+            font-size: 6em;
+        }
+
+        /* Персонажи */
+        .character {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            overflow: hidden;
+            border: 3px solid #fff;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            z-index: 50;
+        }
+
+        .character img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .character:hover {
+            transform: scale(1.3);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+        }
+
+        .character.found {
+            border-color: #00ff00;
+            box-shadow: 0 0 30px #00ff00;
+            animation: found 1s ease;
+            pointer-events: none;
+        }
+
+        @keyframes found {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.5) rotate(10deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        .character-name {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 5px;
+            font-size: 0.7em;
+            white-space: nowrap;
+            display: none;
+        }
+
+        .character:hover .character-name {
+            display: block;
+        }
+
+        /* Сообщение */
+        .message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            border: 3px solid #ff69b4;
+            padding: 30px 50px;
+            font-size: 1.5em;
+            z-index: 1000;
+            display: none;
+            text-align: center;
+        }
+
+        .message.show {
+            display: block;
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            from { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        /* Финальный экран */
+        #finalScreen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #000 0%, #1a0033 100%);
+            z-index: 2000;
+            overflow-y: auto;
+            padding: 50px 20px;
+        }
+
+        .final-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .final-title {
+            font-size: 3em;
+            color: #00ff00;
+            text-shadow: 0 0 20px #00ff00;
+            margin-bottom: 30px;
+        }
+
+        .final-stats {
+            background: rgba(0, 255, 0, 0.1);
+            border: 2px solid #00ff00;
+            padding: 30px;
+            margin: 30px 0;
+            font-size: 1.2em;
+        }
+
+        .final-stats p { margin: 15px 0; }
+
+        .access-code {
+            background: #000;
+            border: 3px solid #ffd700;
+            padding: 20px;
+            font-size: 2em;
+            color: #ffd700;
+            letter-spacing: 5px;
+            margin: 30px 0;
+            font-weight: bold;
+        }
+
+        .instructions {
+            background: rgba(255, 105, 180, 0.1);
+            border: 2px solid #ff69b4;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .instructions h3 { color: #ff69b4; margin-bottom: 15px; }
+        .instructions ol { margin-left: 20px; line-height: 1.8; }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5em; }
+            .house { width: 200px; height: 180px; }
+            .character { width: 60px; height: 60px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Главная страница -->
+    <div id="homeScreen">
+        <h1>LIMEX THE HUNT 1</h1>
+        <p class="subtitle">[ 3D ПРИКЛЮЧЕНИЕ ]</p>
+        <button class="start-btn" onclick="startGame()">НАЧАТЬ ИГРУ</button>
+    </div>
+
+    <!-- Игровой экран -->
+    <div id="gameScreen">
+        <div class="hud">
+            <div class="hud-info">
+                НАЙДЕНО: <span id="foundCount">0</span> / <span>12</span>
+            </div>
+            <div class="timer" id="timer">00:00</div>
+        </div>
+
+        <div class="location-name" id="locationName">🌸 САКУРА</div>
+
+        <!-- Сцена: Сакура -->
+        <div class="scene" id="scene-sakura">
+            <div class="sakura-tree" style="left: 10%; top: 20%;">🌸</div>
+            <div class="sakura-tree" style="right: 15%; top: 30%;">🌸</div>
+            
+            <div class="house" style="left: 50%; top: 40%; transform: translateX(-50%);" onclick="goToScene('house')">
+                🏠
+            </div>
+
+            <div class="swing" style="left: 20%; bottom: 20%;">
+                <div class="swing-seat"></div>
+            </div>
+
+            <div class="swing" style="right: 25%; bottom: 25%;">
+                <div class="swing-seat"></div>
+            </div>
+
+            <div class="garden-entrance" style="right: 5%; top: 50%;" onclick="goToScene('garden')">
+                🌿
+            </div>
+        </div>
+
+        <!-- Сцена: Дом -->
+        <div class="scene hidden" id="scene-house">
+            <div class="computer" style="left: 50%; top: 50%; transform: translate(-50%, -50%);" onclick="goToScene('matrix')">
+                <div class="computer-screen">MATRIX</div>
+                💻
+            </div>
+
+            <div class="exit-house" onclick="goToScene('sakura')">
+                
+            </div>
+        </div>
+
+        <!-- Сцена: Матрица -->
+        <div class="scene hidden" id="scene-matrix">
+            <div class="abyss" onclick="goToScene('darkness')">
+                ️ ПАДЕНИЕ В БЕЗДНУ ⬇️
+            </div>
+        </div>
+
+        <!-- Сцена: Тьма -->
+        <div class="scene hidden" id="scene-darkness">
+            <div class="spike-pit" onclick="goToScene('sakura')">
+                🕳️ ЯМА С ШИПАМИ
+            </div>
+        </div>
+
+        <!-- Сцена: Сад -->
+        <div class="scene hidden" id="scene-garden">
+            <div class="garden-tree" style="left: 10%; top: 20%;">🌳</div>
+            <div class="garden-tree" style="right: 15%; top: 25%;">🌳</div>
+            <div class="garden-tree" style="left: 40%; top: 15%;">🌳</div>
+
+            <div class="tomato-plant" style="left: 20%; bottom: 30%;">🍅</div>
+            <div class="tomato-plant" style="left: 35%; bottom: 35%;">🍅</div>
+            <div class="tomato-plant" style="right: 25%; bottom: 25%;">🍅</div>
+
+            <div class="minecraft-portal" style="right: 10%; top: 50%;" onclick="goToScene('minecraft')">
+                
+            </div>
+        </div>
+
+        <!-- Сцена: Майнкрафт -->
+        <div class="scene hidden" id="scene-minecraft">
+            <div class="mc-tree" style="left: 20%; top: 20%;">🌲</div>
+            <div class="mc-block" style="left: 50%; bottom: 20%;"></div>
+            <div class="mc-block" style="left: 55%; bottom: 20%;"></div>
+            <div class="mc-block" style="left: 60%; bottom: 20%;"></div>
+        </div>
+    </div>
+
+    <!-- Финальный экран -->
+    <div id="finalScreen">
+        <div class="final-content">
+            <h2 class="final-title">🎉 ВСЕ НАЙДЕНЫ! </h2>
+            
+            <div class="final-stats">
+                <p><strong>️ Время прохождения:</strong> <span id="finalTime">00:00</span></p>
+                <p><strong>👥 Найдено персонажей:</strong> 12 / 12</p>
+            </div>
+
+            <div class="access-code" id="accessCode">LIMEX-XXXX-XXXX</div>
+
+            <div class="instructions">
+                <h3>📸 КАК ПОЛУЧИТЬ ПРИЗ:</h3>
+                <ol>
+                    <li>Сделай скриншот этого экрана</li>
+                    <li>Отправь в ЛС @LimexStudios или @CATGIRL🐱</li>
+                    <li>Укажи свой ник на сервере</li>
+                    <li>Жди выдачи приза (24 часа)</li>
+                </ol>
+            </div>
+
+            <button class="start-btn" onclick="location.reload()">ИГРАТЬ СНОВА</button>
+        </div>
+    </div>
+
+    <!-- Сообщение -->
+    <div class="message" id="message"></div>
+
+    <script>
+        // Данные персонажей
+        const characters = [
+            // Сакура (3)
+            { id: 1, name: 'CATGIRL', avatar: 'avatars/catgirl.png', scene: 'sakura', pos: { x: 22, y: 65 } },
+            { id: 2, name: 'TRICLY', avatar: 'avatars/tricly.png', scene: 'sakura', pos: { x: 65, y: 55 } },
+            { id: 3, name: 'ХОЗЯИН', avatar: 'avatars/hozyain.png', scene: 'sakura', pos: { x: 72, y: 68 } },
+            // Дом (0 - просто переход)
+            // Матрица (2)
+            { id: 4, name: 'LimuStudios', avatar: 'avatars/limustudios.png', scene: 'matrix', pos: null },
+            { id: 5, name: 'Lisudobot', avatar: 'avatars/lisudobot.png', scene: 'matrix', pos: null },
+            // Тьма (3)
+            { id: 6, name: 'принц_цьмы', avatar: 'avatars/princ_tmy.png', scene: 'darkness', pos: null },
+            { id: 7, name: 'k1lonchik', avatar: 'avatars/k1lonchik.png', scene: 'darkness', pos: null },
+            { id: 8, name: 'dark angel', avatar: 'avatars/dark_angel.png', scene: 'darkness', pos: null },
+            // Сад (3)
+            { id: 9, name: 'LEGENDARCHYK', avatar: 'avatars/legendarchyk.png', scene: 'garden', pos: { x: 35, y: 25 } },
+            { id: 10, name: 'sopilka00', avatar: 'avatars/sopilka00.png', scene: 'garden', pos: { x: 65, y: 70 } },
+            { id: 11, name: 'потужность', avatar: 'avatars/potuzhnost.png', scene: 'garden', pos: null },
+            // Майнкрафт (1)
+            { id: 12, name: 'Loli', avatar: 'avatars/loli.png', scene: 'minecraft', pos: { x: 45, y: 55 } }
+        ];
+
+        let foundCharacters = [];
+        let currentScene = 'sakura';
+        let startTime = null;
+        let timerInterval = null;
+
+        const sceneNames = {
+            'sakura': '🌸 САКУРА',
+            'house': '🏠 ДОМ',
+            'matrix': '💚 МАТРИЦА',
+            'darkness': '🌑 ТЬМА',
+            'garden': '🌿 САД',
+            'minecraft': '⛏️ МАЙНКРАФТ'
+        };
+
+        function startGame() {
+            document.getElementById('homeScreen').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'block';
+            
+            generateMatrixRain();
+            generateDarkParticles();
+            placeCharacters();
+            
+            startTime = Date.now();
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function goToScene(sceneName) {
+            // Скрываем текущую сцену
+            document.getElementById(`scene-${currentScene}`).classList.add('hidden');
+            
+            // Показываем новую
+            document.getElementById(`scene-${sceneName}`).classList.remove('hidden');
+            currentScene = sceneName;
+            
+            // Обновляем название локации
+            document.getElementById('locationName').textContent = sceneNames[sceneName];
+            
+            showMessage(`📍 ${sceneNames[sceneName]}`, 1500);
+        }
+
+        function generateMatrixRain() {
+            const matrix = document.getElementById('scene-matrix');
+            const chars = '01アイウエオカキクケコ';
+            
+            for (let i = 0; i < 50; i++) {
+                const rain = document.createElement('div');
+                rain.className = 'matrix-code';
+                rain.textContent = chars[Math.floor(Math.random() * chars.length)];
+                rain.style.left = Math.random() * 100 + '%';
+                rain.style.animationDelay = Math.random() * 3 + 's';
+                rain.style.animationDuration = (2 + Math.random() * 3) + 's';
+                matrix.appendChild(rain);
+            }
+        }
+
+        function generateDarkParticles() {
+            const darkness = document.getElementById('scene-darkness');
+            
+            for (let i = 0; i < 60; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'dark-particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 4 + 's';
+                darkness.appendChild(particle);
+            }
+        }
+
+        function placeCharacters() {
+            characters.forEach(char => {
+                const scene = document.getElementById(`scene-${char.scene}`);
+                
+                const character = document.createElement('div');
+                character.className = 'character';
+                
+                // Позиция
+                let x, y;
+                if (char.pos) {
+                    x = char.pos.x;
+                    y = char.pos.y;
+                } else {
+                    x = 10 + Math.random() * 75;
+                    y = 15 + Math.random() * 65;
+                }
+                
+                character.style.left = x + '%';
+                character.style.top = y + '%';
+                
+                // Аватарка
+                const img = document.createElement('img');
+                img.src = char.avatar;
+                img.alt = char.name;
+                img.onerror = () => {
+                    character.style.background = '#ff69b4';
+                    character.textContent = char.name[0];
+                };
+                character.appendChild(img);
+                
+                // Имя
+                const nameTag = document.createElement('div');
+                nameTag.className = 'character-name';
+                nameTag.textContent = char.name;
+                character.appendChild(nameTag);
+                
+                character.dataset.id = char.id;
+                character.onclick = () => findCharacter(character, char);
+                scene.appendChild(character);
+            });
+        }
+
+        function findCharacter(element, char) {
+            if (foundCharacters.includes(char.id)) {
+                showMessage(`✅ ${char.name} уже найден!`, 1500);
+                return;
+            }
+
+            element.classList.add('found');
+            foundCharacters.push(char.id);
+            document.getElementById('foundCount').textContent = foundCharacters.length;
+
+            showMessage(`✅ НАЙДЕН: ${char.name}!`, 2000);
+
+            if (foundCharacters.length === characters.length) {
+                setTimeout(showFinalScreen, 2000);
+            }
+        }
+
+        function showMessage(text, duration) {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.classList.add('show');
+            setTimeout(() => msg.classList.remove('show'), duration);
+        }
+
+        function updateTimer() {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+            const seconds = (elapsed % 60).toString().padStart(2, '0');
+            document.getElementById('timer').textContent = `${minutes}:${seconds}`;
+        }
+
+        function showFinalScreen() {
+            clearInterval(timerInterval);
+            
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+            const seconds = (elapsed % 60).toString().padStart(2, '0');
+            
+            document.getElementById('gameScreen').style.display = 'none';
+            document.getElementById('finalScreen').style.display = 'block';
+            document.getElementById('finalTime').textContent = `${minutes}:${seconds}`;
+
+            const code = 'LIMEX-' + 
+                Math.random().toString(36).substring(2, 6).toUpperCase() + '-' +
+                Math.random().toString(36).substring(2, 6).toUpperCase();
+            document.getElementById('accessCode').textContent = code;
+        }
+    </script>
+</body>
+</html>
