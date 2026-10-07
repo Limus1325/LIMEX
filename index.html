@@ -2501,39 +2501,38 @@ function buildPig(x, z) {
         }
 
         function updatePlayer() {
-            const speed = 0.25;
-            const forward = new THREE.Vector3(
-                -Math.sin(player.angle),
-                0,
-                -Math.cos(player.angle)
-            );
-            const right = new THREE.Vector3(
-                Math.cos(player.angle),
-                0,
-                -Math.sin(player.angle)
-            );
-
-            if (keys['w']) {
-                player.x += forward.x * speed;
-                player.z += forward.z * speed;
-            }
-            if (keys['s']) {
-                player.x -= forward.x * speed;
-                player.z -= forward.z * speed;
-            }
-            if (keys['a']) {
-                player.x -= right.x * speed;
-                player.z -= right.z * speed;
-            }
-            if (keys['d']) {
-                player.x += right.x * speed;
-                player.z += right.z * speed;
-            }
-
-            const bound = 90;
-            player.x = Math.max(-bound, Math.min(bound, player.x));
-            player.z = Math.max(-bound, Math.min(bound, player.z));
-        }
+    const speed = 0.3;
+    
+    // Получаем направление куда смотрит камера
+    const direction = new THREE.Vector3();
+    camera.getWorldDirection(direction);
+    direction.y = 0; // Игнорируем наклон вверх/вниз
+    direction.normalize();
+    
+    // Вектор вправо (перпендикулярно направлению)
+    const right = new THREE.Vector3();
+    right.crossVectors(direction, new THREE.Vector3(0, 1, 0));
+    
+    // Суммируем движение
+    const moveVector = new THREE.Vector3();
+    
+    if (keys['w'] || keys['ц']) moveVector.add(direction);
+    if (keys['s'] || keys['ы']) moveVector.sub(direction);
+    if (keys['a'] || keys['ф']) moveVector.sub(right);
+    if (keys['d'] || keys['в']) moveVector.add(right);
+    
+    // Нормализация (чтобы по диагонали не было быстрее)
+    if (moveVector.length() > 0) {
+        moveVector.normalize();
+        player.x += moveVector.x * speed;
+        player.z += moveVector.z * speed;
+    }
+    
+    // Границы мира
+    const bound = 90;
+    player.x = Math.max(-bound, Math.min(bound, player.x));
+    player.z = Math.max(-bound, Math.min(bound, player.z));
+}
 
         function checkInteractions() {
             const hint = document.getElementById('interactHint');
