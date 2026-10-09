@@ -1674,7 +1674,80 @@ player.pitch = 0;
             player.x = Math.max(-bound, Math.min(bound, player.x));
             player.z = Math.max(-bound, Math.min(bound, player.z));
         }
+        // Массив объектов для коллизий
+let collisionObjects = [];
 
+function buildCollisionObjects() {
+    collisionObjects = [];
+    
+    // Собираем все меши из сцены для проверки коллизий
+    scene.traverse((object) => {
+        if (object.isMesh && object.geometry) {
+            const box = new THREE.Box3().setFromObject(object);
+            if (!box.isEmpty()) {
+                collisionObjects.push({
+                    mesh: object,
+                    box: box,
+                    size: new THREE.Vector3().subVectors(box.max, box.min)
+                });
+            }
+        }
+    });
+}
+
+function checkCollision(newX, newZ) {
+    const playerRadius = 0.5;
+    const playerBox = new THREE.Box3(
+        new THREE.Vector3(newX - playerRadius, player.y - 1, newZ - playerRadius),
+        new THREE.Vector3(newX + playerRadius, player.y + 1, newZ + playerRadius)
+    );
+    
+    for (let obj of collisionObjects) {
+        if (playerBox.intersectsBox(obj.box)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// Замени функцию updatePlayer на эту:
+function updatePlayer() {
+    const speed = CONFIG.moveSpeed;
+    
+    const direction = new THREE.Vector3();
+    camera.getWorldDirection(direction);
+    direction.y = 0;
+    direction.normalize();
+    
+    const right = new THREE.Vector3();
+    right.crossVectors(direction, new THREE.Vector3(0, 1, 0));
+    
+    const moveVector = new THREE.Vector3();
+    
+    if (keys['w'] || keys['ц']) moveVector.add(direction);
+    if (keys['s'] || keys['ы']) moveVector.sub(direction);
+    if (keys['a'] || keys['ф']) moveVector.sub(right);
+    if (keys['d'] || keys['в']) moveVector.add(right);
+    
+    if (moveVector.length() > 0) {
+        moveVector.normalize();
+        
+        const newX = player.x + moveVector.x * speed;
+        const newZ = player.z + moveVector.z * speed;
+        
+        // Проверяем коллизии по осям отдельно (скольжение вдоль стен)
+        if (!checkCollision(newX, player.z)) {
+            player.x = newX;
+        }
+        if (!checkCollision(player.x, newZ)) {
+            player.z = newZ;
+        }
+    }
+    
+    const bound = CONFIG.worldBound;
+    player.x = Math.max(-bound, Math.min(bound, player.x));
+    player.z = Math.max(-bound, Math.min(bound, player.z));
+}
         function checkInteractions() {
             const hint = document.getElementById('interactHint');
             let nearPortal = false;
