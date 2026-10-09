@@ -244,19 +244,19 @@
     <script>
         // ==================== ДАННЫЕ ====================
         const characters = [
-            { id: 1, name: 'CATGIRL', avatar: 'avatars/catgirl.png', scene: 'sakura', pos: [-15, 3.5, -20] },
-            { id: 2, name: 'TRICLY', avatar: 'avatars/tricly.png', scene: 'sakura', pos: [20, 2.8, -25] },
-            { id: 3, name: 'ХОЗЯИН', avatar: 'avatars/hozyain.png', scene: 'sakura', pos: [15, 3.5, -20] },
-            { id: 4, name: 'LimuStudios', avatar: 'avatars/limustudios.png', scene: 'matrix', pos: [-30, 4, -35] },
-            { id: 5, name: 'Lisudobot', avatar: 'avatars/lisudobot.png', scene: 'matrix', pos: [32, 3, 28] },
-            { id: 6, name: 'принц_цьмы', avatar: 'avatars/princ_tmy.png', scene: 'darkness', pos: [-35, 5, -28] },
-            { id: 7, name: 'k1lonchik', avatar: 'avatars/k1lonchik.png', scene: 'darkness', pos: [35, 3, 30] },
-            { id: 8, name: 'dark angel', avatar: 'avatars/dark_angel.png', scene: 'darkness', pos: [-30, 6, 32] },
-            { id: 9, name: 'LEGENDARCHYK', avatar: 'avatars/legendarchyk.png', scene: 'garden', pos: [18, 14, -15] },
-            { id: 10, name: 'sopilka00', avatar: 'avatars/sopilka00.png', scene: 'garden', pos: [-22, 2.5, 22] },
-            { id: 11, name: 'потужность', avatar: 'avatars/potuzhnost.png', scene: 'garden', pos: [18, 16, -15] },
-            { id: 12, name: 'Loli', avatar: 'avatars/loli.png', scene: 'minecraft', pos: [-10, 4, 10] }
-        ];
+    { id: 1, name: 'CATGIRL', avatar: 'avatars/catgirl.png', scene: 'sakura', pos: [-15, 3.5, -20], rarity: 'legendary' },
+    { id: 2, name: 'TRICLY', avatar: 'avatars/tricly.png', scene: 'sakura', pos: [20, 4, -25], rarity: 'epic' }, // Поднял с 2.8 до 4
+    { id: 3, name: 'ХОЗЯИН', avatar: 'avatars/hozyain.png', scene: 'sakura', pos: [15, 3.5, -20], rarity: 'legendary' },
+    { id: 4, name: 'LimuStudios', avatar: 'avatars/limustudios.png', scene: 'matrix', pos: [-30, 4, -35], rarity: 'legendary' },
+    { id: 5, name: 'Lisudobot', avatar: 'avatars/lisudobot.png', scene: 'matrix', pos: [32, 3, 28], rarity: 'epic' },
+    { id: 6, name: 'принц_цьмы', avatar: 'avatars/princ_tmy.png', scene: 'darkness', pos: [-35, 5, -28], rarity: 'legendary' },
+    { id: 7, name: 'k1lonchik', avatar: 'avatars/k1lonchik.png', scene: 'darkness', pos: [35, 3, 30], rarity: 'rare' },
+    { id: 8, name: 'dark angel', avatar: 'avatars/dark_angel.png', scene: 'darkness', pos: [-30, 6, 32], rarity: 'legendary' },
+    { id: 9, name: 'LEGENDARCHYK', avatar: 'avatars/legendarchyk.png', scene: 'garden', pos: [18, 9, -15], rarity: 'legendary' }, // Было 14, стало 9
+    { id: 10, name: 'sopilka00', avatar: 'avatars/sopilka00.png', scene: 'garden', pos: [-22, 2.5, 22], rarity: 'rare' },
+    { id: 11, name: 'потужность', avatar: 'avatars/potuzhnost.png', scene: 'garden', pos: [18, 11, -15], rarity: 'epic' }, // Было 16, стало 11
+    { id: 12, name: 'Loli', avatar: 'avatars/loli.png', scene: 'minecraft', pos: [-10, 5, 10], rarity: 'legendary' } // Поднял с 4 до 5
+];
 
         const scenes = {
             'sakura': { name: '🌸 САКУРА', color: 0xffb7c5, next: 'house', portalPos: [0, 0, -40], portalType: 'house' },
